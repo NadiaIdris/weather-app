@@ -1,0 +1,304 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 16px;
+}
+
+/*Layout*/
+html {
+  --black: RGBA(0, 0, 0, 0.8);
+  --white: RGB(255, 255, 255);
+  --light_gray: RGB(229, 229, 229);
+  --dark-gray: #1B1B1B;
+  --gradient: linear-gradient(
+      45deg,
+      #EFD702,
+      #FFC700,
+      #FFB800,
+      #FFA800,
+      #FF8A00,
+      #FF6B00
+  );
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Typography */
+
+h1 {
+  font-size: 72px;
+  font-weight: 400;
+  padding-bottom: 25px;
+  color: var(--dark-gray);
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--dark-gray);
+}
+
+h3 {
+  font-size: 18px;
+  margin-top: 20px;
+  color: var(--black);
+}
+
+p {
+  color: var(--black);
+}
+
+/* ------ */
+
+#weather-main-container {
+  flex-grow: 1;
+  background-color: azure;
+  min-width: 320px;
+  overflow-y: auto;
+}
+
+/* Bottom search container */
+#bottom-bar-container {
+  display: flex;
+  flex-direction: row;
+  position: sticky;
+  bottom: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  flex-shrink: 0;
+  height: 58px;
+  min-width: 320px;
+  background-color: var(--white);
+}
+
+#search-container {
+  width: 100%;
+  border-left: 1px solid var(--light_gray);
+  display: flex;
+}
+
+#search-box {
+  font-size: 18px;
+  border: none;
+}
+
+#search-box:focus {
+  outline: 0;
+}
+
+.search-icon {
+  font-size: 24px !important;
+  padding: 20px 3px 20px 20px;
+  color: var(--black);
+
+}
+
+i#my-location {
+  width: 58px;
+  height: 58px;
+  cursor: pointer;
+}
+
+i.search-icon {
+  display: flex;
+  align-self: center;
+}
+
+#my-location {
+  width: 22px;
+  height: 22px;
+  padding: 18px;
+  display: flex !important;
+  justify-content: center;
+  color: var(--black);
+}
+
+/* First time landing page design */
+
+#empty-state {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 320px;
+  background-image: var(--gradient);
+  background-size: 400%;
+  animation: bg-gradient 10s infinite alternate;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow-y: auto;
+}
+
+@keyframes bg-gradient {
+  0% {
+    background-position: left
+  }
+  100% {
+    background-position: right
+  }
+}
+
+.small-bold-caps {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.location-icon-text {
+  font-size: 18px !important;
+  vertical-align: text-bottom;
+  padding-bottom: 2px;
+}
+
+#pop-up {
+  display: none;
+  width: 335px;
+  height: 304px;
+  background-color: var(--white);
+  position: absolute;
+  bottom: 70px;
+  left: 5px;
+  border-radius: 5px;
+}
+
+#pop-up img {
+  width: 308px;
+}
+
+#pop-up-arrow {
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  background-color: var(--white);
+  position: absolute;
+  bottom: -7px;
+  left: 19px;
+}
+
+.space {
+  margin: 9px 0 20px 0;
+  padding: 0 20px;
+}
+
+
+/*    */
+
+#all-weather-container {
+  display: flex;
+  flex-grow: 1;
+}
+
+.day-weather-container {
+  width: 277px;
+  background-color: #FFC700;
+}
+
+.overview-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 335px;
+  background-color: #FFC700;
+}
+
+.day-header {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--black);
+  margin: 20px 0;
+}
+
+.temperatures-container-large {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  width: 130px;
+  justify-content: space-between;
+}
+
+.day-weather-container img {
+  filter: opacity(0.8);
+}
+
+.large-icon {
+  width: 70px;
+  margin: 40px;
+}
+
+.small-icon {
+  width: 23px;
+}
+
+.selected-temp {
+  font-size: 48px;
+}
+
+.not-selected-temp {
+  font-size: 24px;
+}
+
+.c-temp {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.f-temp {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.hour-summary {
+  display: flex;
+  height: 59px;
+  /*background-color: #FFA800;*/
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+.right-col {
+  text-align: right;
+}
+
+.hour-details {
+  display: flex;
+  justify-content: space-between;
+  /*padding: 21px 16px;*/
+  /*background-color: #FFA800;*/
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  transition: max-height 0.1s ease-in;
+}
+
+.hour-details p {
+  font-size: 14px;
+}
+
+.p-space {
+  margin-bottom: 20px;
+}
+
+.hour-container {
+  background-color: #FFA800;
+  cursor: pointer;
+  /*box-shadow: none;*/
+}
+
+.hour-details-accordion {
+  max-height: 250px;
+  padding: 21px 16px;
+  /*box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,0.25);*/
+}
+
+.inner-shadow {
+  -webkit-box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,0.25);
+  -moz-box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,0.25);
+  box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,0.25);
+}

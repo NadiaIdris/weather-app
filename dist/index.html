@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Weather app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+  <link
+      href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap"
+      rel="stylesheet">
+</head>
+<body>
+<div id="empty-state"></div>
+<!--<div id="all-weather-container">-->
+<!--  <div class="day-weather-container">-->
+
+<!--    <div class="overview-container">-->
+<!--      <h2 class="day-header">Now</h2>-->
+<!--      <img class="large-icon" src="images/sun.svg">-->
+<!--      <div class="temperatures-container-large">-->
+<!--        <p class="selected-temp">10<span class="c-temp">&#8451;</span></p>-->
+<!--        <p class="not-selected-temp">50<span class="f-temp">&#8457;</span></p>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--&lt;!&ndash;    // Write a function that passes in the data from the fetch call and&ndash;&gt;-->
+<!--&lt;!&ndash;    // data-index&ndash;&gt;-->
+<!--    <div class="all-hours-container" data-index="${index}">-->
+
+<!--      <div class="hour-container">-->
+<!--        <div class="hour-summary">-->
+<!--          <p>Now</p>-->
+<!--          <img class="small-icon" src="images/small_sun.svg">-->
+<!--          <p>10<span>&#176;</span>/50<span>&#176;</span></p>-->
+<!--        </div>-->
+
+<!--        <div class="hour-details">-->
+<!--          <div class="left-col">-->
+<!--            <p>Wind</p>-->
+<!--            <p class="p-space">UV index</p>-->
+<!--            <p>Humidity</p>-->
+<!--            <p>Dew point</p>-->
+<!--            <p class="p-space">Precipitation</p>-->
+<!--            <p>Sunrise</p>-->
+<!--            <p>Sunset</p>-->
+<!--          </div>-->
+<!--          <div class="right-col">-->
+<!--            <p>Moderate (24km/h)</p>-->
+<!--            <p class="p-space">Very high (10)</p>-->
+<!--            <p>50%</p>-->
+<!--            <p>14C</p>-->
+<!--            <p class="p-space">0%</p>-->
+<!--            <p>6:05 AM</p>-->
+<!--            <p>8:23 PM</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="hour-container">-->
+<!--        <div class="hour-summary">-->
+<!--          <p>Now</p>-->
+<!--          <img class="small-icon" src="images/small_sun.svg">-->
+<!--          <p>10<span>&#176;</span>/50<span>&#176;</span></p>-->
+<!--        </div>-->
+<!--        <div class="hour-details">-->
+<!--          <div class="left-col">-->
+<!--            <p>Wind</p>-->
+<!--            <p class="p-space">UV index</p>-->
+<!--            <p>Humidity</p>-->
+<!--            <p>Dew point</p>-->
+<!--            <p class="p-space">Precipitation</p>-->
+<!--            <p>Sunrise</p>-->
+<!--            <p>Sunset</p>-->
+<!--          </div>-->
+<!--          <div class="right-col">-->
+<!--            <p>Moderate (24km/h)</p>-->
+<!--            <p class="p-space">Very high (10)</p>-->
+<!--            <p>50%</p>-->
+<!--            <p>14C</p>-->
+<!--            <p class="p-space">0%</p>-->
+<!--            <p>6:05 AM</p>-->
+<!--            <p>8:23 PM</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </div>-->
+<!--</div>-->
+
+<aside id="bottom-bar-container">
+  <i id="my-location" class="material-icons">my_location
+  </i>
+  <div id="search-container">
+    <i class="material-icons search-icon">search</i>
+    <input id="search-box" type="text" placeholder="Location...">
+  </div>
+</aside>
+
+<script type="text/javascript" src="main.bundle.js"></script>
+</body>
+</html>
