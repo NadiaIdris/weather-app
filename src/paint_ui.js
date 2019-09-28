@@ -18,9 +18,11 @@ const hidePopUp = () => {
 const paintEmptyLandingPage = () => {
   // If there is no weather data stored in localStorage.
   const weatherData = JSON.parse(localStorage.getItem('weatherData'));
-  if (weatherData !== null) return;
+  if (weatherData) {
+    paintWeatherToViewport();
+  }
 
-  if (weatherData === null) {
+  if (!weatherData) {
     console.log("No weather data available yet.");
     deleteElementBySelector('#empty-state');
 
@@ -47,10 +49,95 @@ const paintEmptyLandingPage = () => {
 };
 
 // Get lat and lon first and then run function paintWeatherToViewport
-const paintWeatherToViewport = (weatherJson) => {
+const paintWeatherToViewport = () => {
   // Delete empty state design
   deleteElementBySelector('#empty-state');
   // Paint new interface
+  const body = document.querySelector('body');
+  const weatherData = JSON.parse(localStorage.getItem('weatherData'));
+  console.log(weatherData);
+  const allWeatherContainer = document.createElement('div');
+  allWeatherContainer.setAttribute('id', 'all-weather-container');
+  body.prepend(allWeatherContainer);
+
+  allWeatherContainer.innerHTML = `
+    <div class="day-weather-container">
+
+    <div class="overview-container">
+      <h2 class="day-header">Now</h2>
+      <img class="large-icon" src="images/sun.svg">
+      <div class="temperatures-container-large">
+        <p class="selected-temp">10<span class="c-temp">&#8451;</span></p>
+        <p class="not-selected-temp">50<span class="f-temp">&#8457;</span></p>
+      </div>
+    </div>
+
+<!--    // Write a function that passes in the data from the fetch call and-->
+<!--    // data-index-->
+    <div class="all-hours-container">
+
+      <div class="hour-container">
+        <div class="hour-summary">
+          <p>Now</p>
+          <img class="small-icon" src="images/small_sun.svg">
+          <p>10<span>&#176;</span>/50<span>&#176;</span></p>
+        </div>
+
+        <div class="hour-details">
+          <div class="left-col">
+            <p>Wind</p>
+            <p class="p-space">UV index</p>
+            <p>Humidity</p>
+            <p>Dew point</p>
+            <p class="p-space">Precipitation</p>
+            <p>Sunrise</p>
+            <p>Sunset</p>
+          </div>
+          <div class="right-col">
+            <p>Moderate (24km/h)</p>
+            <p class="p-space">Very high (10)</p>
+            <p>50%</p>
+            <p>14C</p>
+            <p class="p-space">0%</p>
+            <p>6:05 AM</p>
+            <p>8:23 PM</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hour-container">
+        <div class="hour-summary">
+          <p>Now</p>
+          <img class="small-icon" src="images/small_sun.svg">
+          <p>10<span>&#176;</span>/50<span>&#176;</span></p>
+        </div>
+        <div class="hour-details">
+          <div class="left-col">
+            <p>Wind</p>
+            <p class="p-space">UV index</p>
+            <p>Humidity</p>
+            <p>Dew point</p>
+            <p class="p-space">Precipitation</p>
+            <p>Sunrise</p>
+            <p>Sunset</p>
+          </div>
+          <div class="right-col">
+            <p>Moderate (24km/h)</p>
+            <p class="p-space">Very high (10)</p>
+            <p>50%</p>
+            <p>14C</p>
+            <p class="p-space">0%</p>
+            <p>6:05 AM</p>
+            <p>8:23 PM</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  `;
+
 };
 
 const deleteElementBySelector = (selector) => {
