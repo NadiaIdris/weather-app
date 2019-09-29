@@ -48,18 +48,29 @@ const paintEmptyLandingPage = () => {
   }
 };
 
+// TODO: do something meaning w/ this in the future
+const getHour = (unixTimestamp) => {
+  const date = new Date(unixTimestamp * 1000);
+  const hours = date.getHours();
+  // Every hour fetch data again.
+};
+
+
 // Get lat and lon first and then run function paintWeatherToViewport
 const paintWeatherToViewport = () => {
   // Delete empty state design
   deleteElementBySelector('#empty-state');
+  deleteElementBySelector('#all-weather-container');
   // Paint new interface
   const body = document.querySelector('body');
   const weatherData = JSON.parse(localStorage.getItem('weatherData'));
   console.log(weatherData);
   const allWeatherContainer = document.createElement('div');
   allWeatherContainer.setAttribute('id', 'all-weather-container');
+  allWeatherContainer.style.display = 'flex';
   body.prepend(allWeatherContainer);
 
+  // Make a loop to paint as many days as I have the data.
   allWeatherContainer.innerHTML = `
     <div class="day-weather-container">
 
@@ -71,9 +82,7 @@ const paintWeatherToViewport = () => {
         <p class="not-selected-temp">50<span class="f-temp">&#8457;</span></p>
       </div>
     </div>
-
-<!--    // Write a function that passes in the data from the fetch call and-->
-<!--    // data-index-->
+    
     <div class="all-hours-container">
 
       <div class="hour-container">

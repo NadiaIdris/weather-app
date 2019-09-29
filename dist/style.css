@@ -191,7 +191,8 @@ i.search-icon {
 /*    */
 
 #all-weather-container {
-  display: flex;
+  display: none;
+  /*display: flex;*/
   flex-grow: 1;
 }
 

@@ -41,6 +41,13 @@ const getWeatherDataNow = (lat, lon) => {
       });
 };
 
+// Class for hourly weather data
+class Hourly {
+  // constructor(weather) {
+  //   this.currentTime = weather.currently.time;
+  //   this.
+  // }
+}
 
 
 // const callback = (jsonObject) => {
