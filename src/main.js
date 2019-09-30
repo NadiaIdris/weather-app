@@ -1,28 +1,26 @@
 import {askLocation} from "./data";
 import {
-  generateUI,
-  hidePopUp,
-  showPopUp,
   addClickEventListeners,
+  hidePopUp,
   paintEmptyLandingPage,
-} from "./paint_ui";
-import {save, load} from "./storage";
+  showPopUp,
+}                    from "./paint_ui";
 
-const myLocationIcon = document.querySelector('#my-location');
-
-const main = () => {
-  paintEmptyLandingPage();
+const attachListeners = () => {
+  const myLocationIcon = document.querySelector('#my-location');
   myLocationIcon.addEventListener('click', askLocation);
-  // If in localStorage allow access is not set yet.
   myLocationIcon.addEventListener('mouseover', showPopUp);
   myLocationIcon.addEventListener('mouseout', hidePopUp);
   addClickEventListeners();
 };
 
+const main = () => {
+  attachListeners();
+  paintEmptyLandingPage();
+};
+
 main();
 
-
-
-//TO DO:
+//TODO:
 // - Add shadow to the whole weather details and summary
-// section. Potentially use toggle and a class to do this.
+//   section. Potentially use toggle and a CSS class to do this.

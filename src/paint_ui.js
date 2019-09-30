@@ -1,4 +1,5 @@
-import {LOCATIONS} from "./storage";
+import {load, LOCATIONS}   from "./storage";
+import {getWeatherDataNow} from "./data";
 
 const generateUI = () => {
 
@@ -15,11 +16,15 @@ const hidePopUp = () => {
 };
 
 const paintEmptyLandingPage = () => {
-  const weatherData = JSON.parse(localStorage.getItem(LOCATIONS.WEATHER_DATA));
+  const weatherData = load(LOCATIONS.WEATHER_DATA);
   if (weatherData) {
     // Found weather data in local storage, so paint it.
     paintWeatherToViewport(weatherData);
     
+    // Refresh the weather for the location saved in localStorage.
+    const lat = load(LOCATIONS.LAT);
+    const lng = load(LOCATIONS.LNG);
+    getWeatherDataNow(lat, lng);
   }
   else {
     // There is no weather data stored in localStorage, so paint empty state.
@@ -55,15 +60,14 @@ const getHour = (unixTimestamp) => {
   // Every hour fetch data again.
 };
 
-
-// Get lat and lon first and then run function paintWeatherToViewport
+// TODO: Actually use weatherData to paint the UI (currently dummy data is
+//  painted)
 const paintWeatherToViewport = (weatherData) => {
   // Delete empty state design
   deleteElementBySelector('#empty-state');
   deleteElementBySelector('#all-weather-container');
   // Paint new interface
-  const body = document.querySelector('body');
-  console.log(weatherData);
+  const body                = document.querySelector('body');
   const allWeatherContainer = document.createElement('div');
   allWeatherContainer.setAttribute('id', 'all-weather-container');
   allWeatherContainer.style.display = 'flex';

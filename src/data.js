@@ -1,32 +1,36 @@
-import {save, load, LOCATIONS} from "./storage";
+import {LOCATIONS, save}        from "./storage";
 import {paintWeatherToViewport} from "./paint_ui";
 
 const askLocation = () => {
-  let lon;
-  let lat;
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
-      lon = position.coords.longitude;
-      lat = position.coords.latitude;
-      console.log(lon, lat);
-
-      // fetch the data from dark sky
-      getWeatherDataNow(lat, lon);
+      const lng = position.coords.longitude;
+      const lat = position.coords.latitude;
+      // Save the lat, lng pair to LocalStorage for use later.
+      save(LOCATIONS.LAT, lat);
+      save(LOCATIONS.LNG, lng);
+      // Fetch data from DarkSky API.
+      getWeatherDataNow(lat, lng);
     })
   }
-  // } else {
-  //   // If current location denied, show a pop up describing how to grant
-  //   // access & why.
-  // }
-
+  else {
+    // TODO: If current location denied, show a pop up describing how to grant
+    //  access & why.
+    window.alert("TODO: show pop up describing how to grant access & why");
+  }
 };
 
-const getWeatherDataNow = (lat, lon) => {
-  const API_KEY = '6eae3396dc3311cb103d2f86f03d5775';
-  const url = `https://api.darksky.net/forecast/${API_KEY}/${lat},${lon}?exclude=minutely`;
+const getWeatherDataNow = (lat, lng) => {
+  if (!lat || !lng) {
+    console.warn("Can't get weather, since null arguments were" +
+                     " passed for lat or lng!");
+    return;
+  }
+  
+  const API_KEY     = '6eae3396dc3311cb103d2f86f03d5775';
+  const url         = `https://api.darksky.net/forecast/${API_KEY}/${lat},${lng}?exclude=minutely`;
   const corsFreeUrl = `https://cors-anywhere.herokuapp.com/${url}`;
-
+  
   fetch(corsFreeUrl)
       .then((response) => {
         return response.json();
@@ -49,18 +53,4 @@ class Hourly {
   // }
 }
 
-
-// const callback = (jsonObject) => {
-//   console.log(jsonObject);
-//   const p = document.createElement('p');
-//   p.textContent = `Latitude is ${jsonObject.latitude}, Longitude is ${jsonObject.longitude}, Temperature is ${jsonObject.currently.temperature}`;
-//   document.body.appendChild(p);
-// };
-
-// const getWeatherData = () => {
-//   const submitButton = document.querySelector('#button');
-//   submitButton.addEventListener('click', paintLatAndLon);
-// };
-
-
-export {askLocation};
+export {askLocation, getWeatherDataNow};
