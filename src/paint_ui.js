@@ -1,42 +1,42 @@
-import {getWeatherData} from "./data";
-import {load} from "./storage";
+import {LOCATIONS} from "./storage";
 
 const generateUI = () => {
 
 };
 
 const showPopUp = () => {
-  const popUp = document.querySelector('#pop-up');
+  const popUp         = document.querySelector('#pop-up');
   popUp.style.display = 'block';
 };
 
 const hidePopUp = () => {
-  const popUp = document.querySelector('#pop-up');
+  const popUp         = document.querySelector('#pop-up');
   popUp.style.display = 'none';
 };
 
 const paintEmptyLandingPage = () => {
-  // If there is no weather data stored in localStorage.
-  const weatherData = JSON.parse(localStorage.getItem('weatherData'));
+  const weatherData = JSON.parse(localStorage.getItem(LOCATIONS.WEATHER_DATA));
   if (weatherData) {
-    paintWeatherToViewport();
+    // Found weather data in local storage, so paint it.
+    paintWeatherToViewport(weatherData);
+    
   }
-
-  if (!weatherData) {
+  else {
+    // There is no weather data stored in localStorage, so paint empty state.
     console.log("No weather data available yet.");
     deleteElementBySelector('#empty-state');
-
-    const body = document.querySelector('body');
+    
+    const body                = document.querySelector('body');
     const emptyStateContainer = document.createElement('div');
     emptyStateContainer.setAttribute('id', 'empty-state');
     body.prepend(emptyStateContainer);
-
+    
     emptyStateContainer.innerHTML = `
       <h1>Welcome</h1>
       <h2>Search a location below and the <br>weather will appear here.</h2>
       <div id="pop-up">
         <h3>Get weather for current location</h3>
-        <p class="space">After clicking 
+        <p class="space">After clicking
           <i class="material-icons location-icon-text">my_location</i>, the
         browser will ask for your permission to know your location. Click
         “Allow” to be able to get
@@ -50,26 +50,25 @@ const paintEmptyLandingPage = () => {
 
 // TODO: do something meaning w/ this in the future
 const getHour = (unixTimestamp) => {
-  const date = new Date(unixTimestamp * 1000);
+  const date  = new Date(unixTimestamp * 1000);
   const hours = date.getHours();
   // Every hour fetch data again.
 };
 
 
 // Get lat and lon first and then run function paintWeatherToViewport
-const paintWeatherToViewport = () => {
+const paintWeatherToViewport = (weatherData) => {
   // Delete empty state design
   deleteElementBySelector('#empty-state');
   deleteElementBySelector('#all-weather-container');
   // Paint new interface
   const body = document.querySelector('body');
-  const weatherData = JSON.parse(localStorage.getItem('weatherData'));
   console.log(weatherData);
   const allWeatherContainer = document.createElement('div');
   allWeatherContainer.setAttribute('id', 'all-weather-container');
   allWeatherContainer.style.display = 'flex';
   body.prepend(allWeatherContainer);
-
+  
   // Make a loop to paint as many days as I have the data.
   allWeatherContainer.innerHTML = `
     <div class="day-weather-container">
@@ -146,13 +145,17 @@ const paintWeatherToViewport = () => {
 
   </div>
   `;
-
+  
 };
 
 const deleteElementBySelector = (selector) => {
-  if (!selector) return;
+  if (!selector) {
+    return;
+  }
   const divToRemove = document.querySelector(selector);
-  if (!divToRemove) return;
+  if (!divToRemove) {
+    return;
+  }
   divToRemove.parentNode.removeChild(divToRemove);
 };
 
@@ -160,7 +163,7 @@ const deleteElementBySelector = (selector) => {
 function showWeatherDetails() {
   const hourDetails = this.querySelector('.hour-details');
   hourDetails.classList.toggle('hour-details-accordion');
-
+  
   const hourContainer = document.querySelector('.hour-container');
   console.log(hourContainer);
   hourContainer.classList.toggle('inner-shadow');
@@ -168,7 +171,7 @@ function showWeatherDetails() {
 
 const addClickEventListeners = () => {
   const hourContainers = document.querySelectorAll('.hour-container');
-
+  
   for (const container of hourContainers) {
     container.addEventListener('click', showWeatherDetails);
   }

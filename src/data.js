@@ -1,4 +1,4 @@
-import {save, load} from "./storage";
+import {save, load, LOCATIONS} from "./storage";
 import {paintWeatherToViewport} from "./paint_ui";
 
 const askLocation = () => {
@@ -33,7 +33,7 @@ const getWeatherDataNow = (lat, lon) => {
       })
       .then((weatherData) => {
         //callback(myJson);
-        save('weatherData', weatherData);
+        save(LOCATIONS.WEATHER_DATA, weatherData);
         paintWeatherToViewport(weatherData);
       })
       .catch((reason) => {

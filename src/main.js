@@ -13,7 +13,7 @@ const myLocationIcon = document.querySelector('#my-location');
 const main = () => {
   paintEmptyLandingPage();
   myLocationIcon.addEventListener('click', askLocation);
-// If in localStorage allow access is not set yet.
+  // If in localStorage allow access is not set yet.
   myLocationIcon.addEventListener('mouseover', showPopUp);
   myLocationIcon.addEventListener('mouseout', hidePopUp);
   addClickEventListeners();
