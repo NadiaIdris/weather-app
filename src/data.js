@@ -26,11 +26,11 @@ const getWeatherDataNow = (lat, lng) => {
                      " passed for lat or lng!");
     return;
   }
-  
+
   const API_KEY     = '6eae3396dc3311cb103d2f86f03d5775';
   const url         = `https://api.darksky.net/forecast/${API_KEY}/${lat},${lng}?exclude=minutely`;
   const corsFreeUrl = `https://cors-anywhere.herokuapp.com/${url}`;
-  
+
   fetch(corsFreeUrl)
       .then((response) => {
         return response.json();
@@ -44,13 +44,5 @@ const getWeatherDataNow = (lat, lng) => {
         console.error('There is a problem fetching the URL.', reason);
       });
 };
-
-// Class for hourly weather data
-class Hourly {
-  // constructor(weather) {
-  //   this.currentTime = weather.currently.time;
-  //   this.
-  // }
-}
 
 export {askLocation, getWeatherDataNow};
