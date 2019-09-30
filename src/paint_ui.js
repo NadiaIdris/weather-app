@@ -1,10 +1,6 @@
 import {load, LOCATIONS}   from "./storage";
 import {getWeatherDataNow} from "./data";
 
-const generateUI = () => {
-
-};
-
 const showPopUp = () => {
   const popUp         = document.querySelector('#pop-up');
   popUp.style.display = 'block';
@@ -183,7 +179,6 @@ const addClickEventListeners = () => {
 
 
 export {
-  generateUI,
   showPopUp,
   hidePopUp,
   paintEmptyLandingPage,
