@@ -1,5 +1,30 @@
 const f2c = f => (f - 32) * 5 / 9;
 
+// https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
+const calcTime = (unixTime) => {
+  const date = new Date(unixTime * 1000);
+  const hours = date.getHours();
+  const minutes = "0" + date.getMinutes();
+
+  // If hours is more than 12, then it's PM, else it's AM.
+  if(hours > 12) {
+    return `${hours - 12}:${minutes.substring(minutes.length - 2)} PM`;
+  } else {
+    return `${hours}:${minutes.substring(minutes.length - 2)} AM`;
+  }
+};
+
+const calcHour = (unixTime) => {
+  const date = new Date(unixTime * 1000);
+  const hours = date.getHours();
+  // If hours is more than 12, then it's PM, else it's AM.
+  if(hours > 12) {
+    return `${hours - 12} PM`;
+  } else {
+    return `${hours} AM`;
+  }
+};
+
 /*
 Overview of WEATHER_DATA:
 
@@ -12,12 +37,19 @@ longitude: -122.00416789999998
 offset: -7
 timezone: "America/Los_Angeles"
  */
+// Render all hours for ONE day.
 const renderAllHours = weatherData => {
+  // Create: <div class="all-hours-container">-->
   const hourArray = weatherData.hourly.data;
+  const dailyArray = weatherData.daily.data;
+  const currentlyData = weatherData.currently;
   let content      = "";
   for (const hour of hourArray) {
-    content += renderHour(hour);
+    content += renderHour(hour, dailyArray);
   }
+  // for (let i = 0; i < hourArray.length) {
+  //
+  // }
   return `<div>${content}</div>`;
 };
 
@@ -43,37 +75,55 @@ An "hour" of data looks like this:
   "visibility": 9.625,
   "ozone": 334.6
 }
+ */
+// Use the weatherData.currently to generate the first renderHour, which is now.
+// Then use the for loop to generate (24 - current hour) amount of hour data for
+// that day.
+//
+function renderHour(hourData, dailyData) {
+  const hour = calcHour(hourData.time);
+  const icon = hourData.icon;
+  const temperatureF = hourData.temperature;
+  const temperatureC = f2c(temperatureF);
+  const wind         = hourData.windSpeed;
+  const uvIndex      = hourData.uvIndex;
+  const humidity     = hourData.humidity;
+  const dewPoint     = hourData.dewPoint;
+  const precipitationType     = hourData.precipType;
+  const precipitation     = hourData.precipProbability;
+  const sunrise     = calcTime(dailyData.sunriseTime);
+  const sunset     = calcTime(dailyData.sunsetTime);
+  let content        =
+      `<div class="hour-container">
+        <div class="hour-summary">
+          <p>${hour}</p>
+          <img class="small-icon" src="images/${icon}">
+          <p>${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
+        </div>
 
-The HTML looks like:
-<div class="left-col">
+        <div class="hour-details">
+          <div class="left-col">
             <p>Wind</p>
             <p class="p-space">UV index</p>
             <p>Humidity</p>
             <p>Dew point</p>
+            <p>Precipitation type</p>
             <p class="p-space">Precipitation</p>
             <p>Sunrise</p>
             <p>Sunset</p>
           </div>
- */
-function renderHour(hourData) {
-  const temperatureF = hourData.temperature;
-  const temperatureC = f2c(temperatureF);
-  const wind         = hourData.windSpeed;
-  const humidity     = hourData.humidity;
-  const uvIndex      = hourData.uvIndex;
-  let content        =
-          `<div class="left-col">
-            <p>Wind</p>
-            ${wind}
-            <p class="p-space">UV index</p>
-            ${uvIndex}
-            <p>Humidity</p>
-            ${humidity}
-            <p>Dew point</p>
-            <p class="p-space">Precipitation</p>
-            <p>Sunrise</p>
-            <p>Sunset</p>
-          </div>`;
+          <div class="right-col">
+            <p>${wind} mph</p>
+            <p class="p-space">${uvIndex}</p>
+            <p>${humidity}</p>
+            <p>${dewPoint}</p>
+            <p>${precipitationType}</p>
+            <p class="p-space">${precipitation}</p>
+            <p>${sunrise}</p>
+            <p>${sunset}</p>
+          </div>
+        </div>
+      </div>`;
   return content;
 }
 
