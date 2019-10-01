@@ -177,5 +177,5 @@ function renderDaily(dailyData) {
 
 // TODO: export only the functions that are required by other files.
 export {
-  renderCurrently,
+  renderCurrently, renderHour
 }
