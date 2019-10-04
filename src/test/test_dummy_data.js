@@ -1,3 +1,15 @@
+// Dummy data
+// weatherData.currently.time is Mon Sep 30 2019 16:52:06
+// weatherData.hourly.data[0].time is Mon Sep 30 2019 16:00:00
+// weatherData.hourly.data[1].time is Mon Sep 30 2019 17:00:00
+// weatherData.hourly.data[2].time is Mon Sep 30 2019 18:00:00
+// ...
+
+//weatherData.daily.data[0].time is Mon Sep 30 2019 00:00:00
+//weatherData.daily.data[1].time is Tue Oct 01 2019 00:00:00
+//weatherData.daily.data[2].time is Wed Oct 02 2019 00:00:00
+// ...
+
 const weatherData = {
   "latitude": 37.3914086,
   "longitude": -122.00416789999998,
@@ -1318,3 +1330,4 @@ const weatherData = {
 };
 
 export {weatherData};
+

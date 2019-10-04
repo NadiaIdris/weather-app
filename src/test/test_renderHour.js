@@ -3,9 +3,8 @@ import {weatherData} from "./test_dummy_data";
 
 function test_renderHour() {
   const hourData = weatherData.hourly.data[1];
-  const dailyData = weatherData.daily.data[1];
 
-  const content = renderHour(hourData, dailyData);
+  const content = renderHour(hourData);
 
   console.log(content);
 }
