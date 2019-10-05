@@ -1,3 +1,5 @@
+import {weatherData} from "./test/test_dummy_data";
+
 const f2c = f => Math.round((f - 32) * 5 / 9);
 
 // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
@@ -41,7 +43,8 @@ const formatDate = unixTime => {
   const day = dayNames[dayIndex];
 
   const monthIndex = date.getMonth();
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
+    'Sep', 'Oct', 'Nov', 'Dec'];
   const month = monthNames[monthIndex];
 
   const dayOfMonth = date.getDate();
@@ -106,45 +109,70 @@ Sample of weatherData.daily.data:
       }
 
  */
+// Globals
+let hour = 1;
 
-// Pass either weatherData.currently or
-// pass weatherData.daily.data
-const renderDailySummary = data => {
-  const date = formatDate(data.time);
-  const icon = data.icon;
-  const temperatureF = Math.round(data.temperature);
-  const temperatureC = f2c(temperatureF);
+const renderDay = (weatherData, index) => {
+  // If it's day 1 (today), pass weatherData.currently to the function.
+  // else pass weatherData.daily.data[1]
+  if (hour === 1){
+    renderDayOverview(weatherData.currently);
+  } else {
+    renderDayOverview(weatherData.daily.data[index]);
+  }
 
-  const content = `
-      <div class="overview-container">
-      <h2 class="day-header">${date}</h2>
-      <img class="large-icon" src="images/sun.svg">
-      <div class="temperatures-container-large">
-        <p class="selected-temp">${temperatureC}<span class="c-temp">&#8451;</span></p>
-        <p class="not-selected-temp">${temperatureF}<span class="f-temp">&#8457;</span></p>
-      </div>
-    </div>
-  `;
-
-  return content;
-};
-
-
-// Render all hours for ONE day.
-const renderAllHoursPerDay = weatherData => {
-  // Create: <div class="all-hours-container">-->
+  // TODO: build the stuff below.
+  // // Generate container to hold all the hour data
+  // // Create: <div class="all-hours-container">-->
   // const dayWeatherContainer = document.querySelectorAll('.day-weather-container');
   // const allHoursContainer = document.createElement('div');
   // allHoursContainer.setAttribute('class', 'all-hours-container');
   // dayWeatherContainer.appendChild(allHoursContainer);
 
+  // Paint all hours
+  renderAllHoursPerDay(weatherData);
+
+};
+
+
+const renderAllDays = () => {
+// Put renderDay through a loop
+  const dailyDataArray = weatherData.daily.data;
+  dailyDataArray.map(renderDay(weatherData)).join('');
+};
+
+
+// Pass either weatherData.currently or
+// pass weatherData.daily.data
+const renderDayOverview = data => {
+  const date = formatDate(data.time);
+  const icon = data.icon;
+  const rightTemperatureF = data.temperature ? Math.round(data.temperature) :
+      Math.round(data.temperatureHigh);
+  const rightTemperatureC = f2c(rightTemperatureF);
+
+  return `
+    <div class="overview-container">
+      <h2 class="day-header">${date}</h2>
+      <img class="large-icon" src="images/${icon}">
+      <div class="temperatures-container-large">
+        <p class="selected-temp">${rightTemperatureC}<span class="c-temp">&#8451;</span></p>
+        <p class="not-selected-temp">${rightTemperatureF}<span class="f-temp">&#8457;</span></p>
+      </div>
+    </div>
+  `;
+};
+
+
+// Render all hours for ONE day.
+const renderAllHoursPerDay = weatherData => {
   const hourArray = weatherData.hourly.data;
   const currentWeather = weatherData.currently;
   let content = "";
 
   // I think these are meant to be global??
   let totalHoursLeft = hourArray.length;
-  let hour = 1;
+  // let hour = 1;
 
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 1) {
@@ -161,9 +189,9 @@ const renderAllHoursPerDay = weatherData => {
   }
   totalHoursLeft -= hoursLeftInADay;
   console.log(`Total hours left is = ${totalHoursLeft}`);
-  console.log(`Hours painted after the day is = ${hour}`);
+  console.log(`All hours painted after the day(s) is = ${hour}`);
 
-  return `<div>${content}</div>`;
+  return `<div class="all-hours-container">${content}</div>`;
 };
 
 /*
@@ -286,4 +314,5 @@ export {
   renderCurrently,
   renderHour,
   renderAllHoursPerDay,
+  renderDayOverview,
 }
