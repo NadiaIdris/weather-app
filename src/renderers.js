@@ -113,12 +113,13 @@ Sample of weatherData.daily.data:
 let hour = 1;
 
 const renderDay = (weatherData, index) => {
+  let content = '';
   // If it's day 1 (today), pass weatherData.currently to the function.
   // else pass weatherData.daily.data[1]
   if (hour === 1){
-    renderDayOverview(weatherData.currently);
+    content += renderDayOverview(weatherData.currently);
   } else {
-    renderDayOverview(weatherData.daily.data[index]);
+    content += renderDayOverview(weatherData.daily.data[index]);
   }
 
   // TODO: build the stuff below.
@@ -130,8 +131,9 @@ const renderDay = (weatherData, index) => {
   // dayWeatherContainer.appendChild(allHoursContainer);
 
   // Paint all hours
-  renderAllHoursPerDay(weatherData);
+  content += renderAllHoursPerDay(weatherData);
 
+  return `<div class="day-weather-container">${content}</div>`;
 };
 
 
@@ -315,4 +317,5 @@ export {
   renderHour,
   renderAllHoursPerDay,
   renderDayOverview,
+  renderDay,
 }
