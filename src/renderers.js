@@ -24,6 +24,8 @@ const calcHour = unixTime => {
   // If hours is more than 12, then it's PM, else it's AM.
   if (hours > 12) {
     return `${hours - 12} PM`;
+  } else if (hours === 12) {
+    return `${hours} PM`;
   } else {
     return `${hours} AM`;
   }
@@ -110,37 +112,38 @@ Sample of weatherData.daily.data:
 
  */
 // Globals
-let hour = 1;
+let hour = 8;
+let totalHoursLeft;
 
 const renderDay = (weatherData, index) => {
   let content = '';
-  // If it's day 1 (today), pass weatherData.currently to the function.
-  // else pass weatherData.daily.data[1]
-  if (hour === 1){
-    content += renderDayOverview(weatherData.currently);
-  } else {
-    content += renderDayOverview(weatherData.daily.data[index]);
+
+  function paintDayOverview() {
+    // If it's day 1 (today), pass weatherData.currently to the function.
+    // else pass weatherData.daily.data[1]
+    if (hour === 0) {
+      content += renderDayOverview(weatherData.currently);
+    } else {
+      content += renderDayOverview(weatherData.daily.data[index]);
+    }
   }
 
-  // TODO: build the stuff below.
-  // // Generate container to hold all the hour data
-  // // Create: <div class="all-hours-container">-->
-  // const dayWeatherContainer = document.querySelectorAll('.day-weather-container');
-  // const allHoursContainer = document.createElement('div');
-  // allHoursContainer.setAttribute('class', 'all-hours-container');
-  // dayWeatherContainer.appendChild(allHoursContainer);
+  paintDayOverview();
 
-  // Paint all hours
-  content += renderAllHoursPerDay(weatherData);
+  // If no hours left..... don't print them
+  if (weatherData.hourly.data){
+    content += renderAllHoursPerDay(weatherData);
+  }
 
   return `<div class="day-weather-container">${content}</div>`;
 };
 
 
-const renderAllDays = () => {
+const renderAllDays = (weatherData) => {
 // Put renderDay through a loop
   const dailyDataArray = weatherData.daily.data;
   dailyDataArray.map(renderDay(weatherData)).join('');
+  console.log(dailyDataArray.map(renderDay(weatherData)).join(''));
 };
 
 
@@ -172,23 +175,26 @@ const renderAllHoursPerDay = weatherData => {
   const currentWeather = weatherData.currently;
   let content = "";
 
-  // I think these are meant to be global??
-  let totalHoursLeft = hourArray.length;
-  // let hour = 1;
-
+  totalHoursLeft = hourArray.length;      //49
+  console.log(`Total hours left is = ${totalHoursLeft}`);
   // If it's a day 1, generate first hour with current weather data.
-  if (hour === 1) {
+  if (hour === 0) {
     content += renderHour(currentWeather);
+    hour ++;
   }
-  // Generate the rest of hours for the day. Ignore the
-  // first element of the hourArray (it's old data).
-  const currentHour = getCurrentHour(currentWeather.time);    // 15
+
+  // Increment the current weather hour by 1, because we have already
+  // printed the current weather hour on the viewport.
+  const currentHour = hour === 1 ? (getCurrentHour(currentWeather.time) + 1) : 0; //17
+  console.log(`Current hour is = ${currentHour}`);  //17
   const hoursInADay = 24;
-  const hoursLeftInADay = hoursInADay - currentHour;          // 24-15 = 9
-  for (let i = hour; i < hoursLeftInADay; i++) {           // 1 to 8 element
-    content += renderHour(hourArray[i]);
-    hour = i;
+  const hoursLeftInADay = hoursInADay - currentHour;          // 24-17 = 7
+  console.log(`Hours left in a day without doing anything yet = ${hoursLeftInADay}`);
+  for (let i = 0; i < hoursLeftInADay && hour < hourArray.length; i++) {
+    content += renderHour(hourArray[hour]);
+    hour++;
   }
+
   totalHoursLeft -= hoursLeftInADay;
   console.log(`Total hours left is = ${totalHoursLeft}`);
   console.log(`All hours painted after the day(s) is = ${hour}`);
@@ -221,7 +227,7 @@ An "hour" of data looks like this:
  */
 
 function renderHour(hourData) {
-  const hour = calcHour(hourData.time);
+  const hourEvaluated = calcHour(hourData.time);
   const icon = hourData.icon;
   const temperatureF = Math.round(hourData.temperature);
   const temperatureC = f2c(temperatureF);
@@ -232,11 +238,12 @@ function renderHour(hourData) {
   const precipitation = hourData.precipProbability;
   // const sunrise     = calcTime(dailyData.sunriseTime);
   // const sunset     = calcTime(dailyData.sunsetTime);
+  const hourToPrint = hour === 0 ? "Now" : hourEvaluated;
   let content =
       `  
       <div class="hour-container">
         <div class="hour-summary">
-          <p>${hour}</p>
+          <p>${hourToPrint}</p>
           <img class="small-icon" src="images/${icon}">
           <p>${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
         </div>
@@ -263,57 +270,8 @@ function renderHour(hourData) {
   return content;
 }
 
-// TODO: rewrite ALL the code below.
-
-/*
-This is what "weatherData.currently" data looks like
-
-{
-  "time": 1569812750,
-  "summary": "Partly Cloudy",
-  "icon": "partly-cloudy-night",
-  "nearestStormDistance": 13,
-  "nearestStormBearing": 62,
-  "precipIntensity": 0,
-  "precipProbability": 0,
-  "temperature": 58.73,
-  "apparentTemperature": 58.73,
-  "dewPoint": 41.67,
-  "humidity": 0.53,
-  "pressure": 1013.44,
-  "windSpeed": 3.39,
-  "windGust": 10.42,
-  "windBearing": 271,
-  "cloudCover": 0.37,
-  "uvIndex": 0,
-  "visibility": 9.611,
-  "ozone": 334.3
-}
- */
-const renderCurrently = weatherData => {
-  const currently = weatherData.currently;
-  let content = "";
-  content += currently.temperature + "F";
-  content += f2c(currently.temperature) + "C";
-  return `<div>${content}</div>`;
-};
-
-const renderAllDaily = weatherData => {
-  let content = "";
-  const dailyArray = weatherData.daily.data;
-  for (const daily of dailyArray) {
-    content += renderDaily(daily);
-  }
-  return "</div>";
-};
-
-function renderDaily(dailyData) {
-  return "</div>";
-}
-
 // TODO: export only the functions that are required by other files.
 export {
-  renderCurrently,
   renderHour,
   renderAllHoursPerDay,
   renderDayOverview,

@@ -2,7 +2,7 @@ import {askLocation} from "./data";
 import {
   addClickEventListeners,
   hidePopUp,
-  paintEmptyLandingPage,
+  paintLandingPage,
   showPopUp,
 }                    from "./paint_ui";
 import {test_all} from "./test/test_all";
@@ -12,17 +12,16 @@ const attachListeners = () => {
   myLocationIcon.addEventListener('click', askLocation);
   myLocationIcon.addEventListener('mouseover', showPopUp);
   myLocationIcon.addEventListener('mouseout', hidePopUp);
-  addClickEventListeners();
 };
 
 const main = () => {
   attachListeners();
-  paintEmptyLandingPage();
+  paintLandingPage();
 };
 
 main();
 
-test_all();
+// test_all();
 
 //TODO:
 // - Add shadow to the whole weather details and summary
