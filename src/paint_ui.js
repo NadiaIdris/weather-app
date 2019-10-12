@@ -1,6 +1,6 @@
 import {load, LOCATIONS} from "./storage";
 import {getWeatherDataNow} from "./data";
-import {renderDay} from "./renderers";
+import {renderWeatherData} from "./renderers";
 
 
 const showPopUp = () => {
@@ -13,28 +13,15 @@ const hidePopUp = () => {
   popUp.style.display = 'none';
 };
 
-const paintLandingPage = () => {
-  const weatherData = load(LOCATIONS.WEATHER_DATA);
-  if (weatherData) {
-    // Found weather data in local storage, so paint it.
-    paintWeatherToViewport(weatherData);
+function paintEmptyState() {
+  deleteElementBySelector('#empty-state');
 
-    // Refresh the weather for the location saved in localStorage.
-    const lat = load(LOCATIONS.LAT);
-    const lng = load(LOCATIONS.LNG);
-    getWeatherDataNow(lat, lng);
-  }
-  else {
-    // There is no weather data stored in localStorage, so paint empty state.
-    console.log("No weather data available yet.");
-    deleteElementBySelector('#empty-state');
+  const body = document.querySelector('body');
+  const emptyStateContainer = document.createElement('div');
+  emptyStateContainer.setAttribute('id', 'empty-state');
+  body.prepend(emptyStateContainer);
 
-    const body                = document.querySelector('body');
-    const emptyStateContainer = document.createElement('div');
-    emptyStateContainer.setAttribute('id', 'empty-state');
-    body.prepend(emptyStateContainer);
-
-    emptyStateContainer.innerHTML = `
+  emptyStateContainer.innerHTML = `
       <h1>Welcome</h1>
       <h2>Search a location below and the <br>weather will appear here.</h2>
       <div id="pop-up">
@@ -48,31 +35,21 @@ const paintLandingPage = () => {
         <div id="pop-up-arrow"></div>
       </div>
     `;
+}
+
+const paintLandingPage = () => {
+  const weatherData = load(LOCATIONS.WEATHER_DATA);
+  if (weatherData) {
+    // Found weather data in local storage, so paint it.
+    renderWeatherData(weatherData);
+
+    // Refresh the weather for the location saved in localStorage.
+    const lat = load(LOCATIONS.LAT);
+    const lng = load(LOCATIONS.LNG);
+    getWeatherDataNow(lat, lng);
   }
-};
-
-// TODO: Actually use weatherData to paint the UI (currently dummy data is
-//  painted)
-const paintWeatherToViewport = (weatherData) => {
-
-  // Make a loop to paint as many days as I have the data.
-  const weatherDailyArray = weatherData.daily.data;
-  console.log(weatherDailyArray);
-
-  // Reset the DOM.
-  deleteElementBySelector('#empty-state');
-  deleteElementBySelector('#all-weather-container');
-
-  // Paint new interface.
-  const body                = document.querySelector('body');
-  const allWeatherContainer = document.createElement('div');
-  allWeatherContainer.setAttribute('id', 'all-weather-container');
-  allWeatherContainer.style.display = 'flex';
-  body.prepend(allWeatherContainer);
-
-  for(let i = 0; i < weatherDailyArray.length; i++) {
-    allWeatherContainer.innerHTML = renderDay(weatherData, i);
-    addClickEventListeners();
+  else {
+    paintEmptyState();
   }
 };
 
@@ -105,6 +82,5 @@ export {
   hidePopUp,
   paintLandingPage,
   deleteElementBySelector,
-  paintWeatherToViewport,
   addClickEventListeners,
 };

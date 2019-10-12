@@ -1,4 +1,4 @@
-import {renderDayOverview} from "../renderers";
+import {testing} from "../renderers";
 import {weatherData} from "./test_dummy_data";
 
 function test_renderDayOverview() {
@@ -6,8 +6,8 @@ function test_renderDayOverview() {
   const day = weatherData.daily.data[1];
 
   let content = "";
-  content += renderDayOverview(today);
-  content += renderDayOverview(day);
+  content += testing.renderDayOverview(today);
+  content += testing.renderDayOverview(day);
   console.log(content);
 }
 

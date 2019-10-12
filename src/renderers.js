@@ -1,58 +1,6 @@
-import {weatherData} from "./test/test_dummy_data";
+import {calcHour, f2c, formatDate, getCurrentHour} from "./utils";
+import {addClickEventListeners, deleteElementBySelector} from "./paint_ui";
 
-const f2c = f => Math.round((f - 32) * 5 / 9);
-
-// https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
-const calcTime = unixTime => {
-  const date = new Date(unixTime * 1000);
-  const hours = date.getHours();
-  const minutes = "0" + date.getMinutes();
-
-  // If hours is more than 12, then it's PM, else it's AM.
-  if (hours > 12) {
-    return `${hours - 12}:${minutes.substring(minutes.length - 2)} PM`;
-  } else if (hours === 12) {
-    return `${hours}:${minutes.substring(minutes.length - 2)} PM`;
-  } else {
-    return `${hours}:${minutes.substring(minutes.length - 2)} AM`;
-  }
-};
-
-const calcHour = unixTime => {
-  const date = new Date(unixTime * 1000);
-  const hours = date.getHours();
-  // If hours is more than 12, then it's PM, else it's AM.
-  if (hours > 12) {
-    return `${hours - 12} PM`;
-  } else if (hours === 12) {
-    return `${hours} PM`;
-  } else {
-    return `${hours} AM`;
-  }
-};
-
-const getCurrentHour = unixTime => {
-  const date = new Date(unixTime * 1000);
-  const hours = date.getHours();
-  return hours;
-};
-
-const formatDate = unixTime => {
-  const date = new Date(unixTime * 1000);
-
-  const dayIndex = date.getDay();  // returns 0 - 6. Sunday - Saturday : 0 - 6.
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const day = dayNames[dayIndex];
-
-  const monthIndex = date.getMonth();
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
-    'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = monthNames[monthIndex];
-
-  const dayOfMonth = date.getDate();
-
-  return `${day}, ${month} ${dayOfMonth}`;
-};
 /*
 Overview of WEATHER_DATA:
 
@@ -112,8 +60,45 @@ Sample of weatherData.daily.data:
 
  */
 // Globals
-let hour = 8;
+let hour;
 let totalHoursLeft;
+
+
+function resetGlobals() {
+  hour = 0;
+  totalHoursLeft = 0;
+}
+
+const renderWeatherData = (weatherData) => {
+  resetGlobals();
+
+  // Make a loop to paint as many days as I have the data.
+  const weatherDailyArray = weatherData.daily.data;
+
+  // Reset the DOM.
+  deleteElementBySelector('#empty-state');
+  deleteElementBySelector('#all-weather-container');
+
+  // Paint new interface.
+  const body = document.querySelector('body');
+  const allWeatherContainer = document.createElement('div');
+  allWeatherContainer.setAttribute('id', 'all-weather-container');
+  allWeatherContainer.style.display = 'flex';
+  body.prepend(allWeatherContainer);
+
+  for (let i = 0; i < weatherDailyArray.length; i++) {
+    allWeatherContainer.innerHTML += renderDay(weatherData, i);
+    addClickEventListeners();
+    if (hour > weatherData.hourly.data.length) {
+      const dayWeatherContainer = document.querySelectorAll('.day-weather-container')[i];
+      dayWeatherContainer.setAttribute('class', 'day-weather-container' +
+          ' center-overview');
+    }
+
+  }
+
+  resetGlobals();
+};
 
 const renderDay = (weatherData, index) => {
   let content = '';
@@ -129,21 +114,11 @@ const renderDay = (weatherData, index) => {
   }
 
   paintDayOverview();
-
   // If no hours left..... don't print them
   if (weatherData.hourly.data){
     content += renderAllHoursPerDay(weatherData);
   }
-
   return `<div class="day-weather-container">${content}</div>`;
-};
-
-
-const renderAllDays = (weatherData) => {
-// Put renderDay through a loop
-  const dailyDataArray = weatherData.daily.data;
-  dailyDataArray.map(renderDay(weatherData)).join('');
-  console.log(dailyDataArray.map(renderDay(weatherData)).join(''));
 };
 
 
@@ -159,7 +134,7 @@ const renderDayOverview = data => {
   return `
     <div class="overview-container">
       <h2 class="day-header">${date}</h2>
-      <img class="large-icon" src="images/${icon}">
+      <img class="large-icon" src="images/${icon}.svg">
       <div class="temperatures-container-large">
         <p class="selected-temp">${rightTemperatureC}<span class="c-temp">&#8451;</span></p>
         <p class="not-selected-temp">${rightTemperatureF}<span class="f-temp">&#8457;</span></p>
@@ -176,7 +151,6 @@ const renderAllHoursPerDay = weatherData => {
   let content = "";
 
   totalHoursLeft = hourArray.length;      //49
-  console.log(`Total hours left is = ${totalHoursLeft}`);
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 0) {
     content += renderHour(currentWeather);
@@ -186,18 +160,14 @@ const renderAllHoursPerDay = weatherData => {
   // Increment the current weather hour by 1, because we have already
   // printed the current weather hour on the viewport.
   const currentHour = hour === 1 ? (getCurrentHour(currentWeather.time) + 1) : 0; //17
-  console.log(`Current hour is = ${currentHour}`);  //17
   const hoursInADay = 24;
   const hoursLeftInADay = hoursInADay - currentHour;          // 24-17 = 7
-  console.log(`Hours left in a day without doing anything yet = ${hoursLeftInADay}`);
   for (let i = 0; i < hoursLeftInADay && hour < hourArray.length; i++) {
     content += renderHour(hourArray[hour]);
     hour++;
   }
 
   totalHoursLeft -= hoursLeftInADay;
-  console.log(`Total hours left is = ${totalHoursLeft}`);
-  console.log(`All hours painted after the day(s) is = ${hour}`);
 
   return `<div class="all-hours-container">${content}</div>`;
 };
@@ -238,13 +208,17 @@ function renderHour(hourData) {
   const precipitation = hourData.precipProbability;
   // const sunrise     = calcTime(dailyData.sunriseTime);
   // const sunset     = calcTime(dailyData.sunsetTime);
-  const hourToPrint = hour === 0 ? "Now" : hourEvaluated;
+  let hourToPrint = hour === 0 ? "Now" : hourEvaluated;
+  if(hourEvaluated === '0 AM') {
+    hourToPrint = 'Midnight';
+  }
+
   let content =
       `  
       <div class="hour-container">
         <div class="hour-summary">
           <p>${hourToPrint}</p>
-          <img class="small-icon" src="images/${icon}">
+          <img class="small-icon" src="images/${icon}.svg">
           <p>${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
         </div>
 
@@ -270,10 +244,15 @@ function renderHour(hourData) {
   return content;
 }
 
-// TODO: export only the functions that are required by other files.
-export {
+const testing = {
   renderHour,
   renderAllHoursPerDay,
   renderDayOverview,
   renderDay,
+};
+
+export {
+  renderWeatherData,
+  testing,
 }
+

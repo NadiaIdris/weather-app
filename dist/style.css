@@ -21,6 +21,8 @@ html {
       #FF8A00,
       #FF6B00
   );
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 body {
@@ -192,20 +194,41 @@ i.search-icon {
 
 #all-weather-container {
   display: none;
-  /*display: flex;*/
   flex-grow: 1;
+  /*overflow-x: scroll;*/
+}
+
+#all-weather-container:hover {
+  overflow-x: scroll;
+}
+
+.all-hours-container {
+  /*overflow-y: scroll;*/
+}
+
+.all-hours-container:hover {
+  overflow-y: scroll;
 }
 
 .day-weather-container {
-  width: 277px;
+  display: flex;
+  flex-direction: column;
+  min-width: 277px;
   background-color: #FFC700;
+  overflow-y: hidden;
+}
+
+.center-overview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .overview-container {
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 335px;
+  min-height: 335px;
   background-color: #FFC700;
 }
 
@@ -229,7 +252,7 @@ i.search-icon {
 }
 
 .large-icon {
-  width: 70px;
+  height: 70px;
   margin: 40px;
 }
 
@@ -303,3 +326,5 @@ i.search-icon {
   -moz-box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,0.25);
   box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,0.25);
 }
+
+

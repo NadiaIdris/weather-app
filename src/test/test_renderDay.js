@@ -1,8 +1,8 @@
-import {renderDay} from "../renderers";
+import {testing} from "../renderers";
 import {weatherData} from "./test_dummy_data";
 
 function test_renderDay() {
-  const content = renderDay(weatherData, 0);
+  const content = testing.renderDay(weatherData, 0);
   console.log(content);
 }
 

@@ -1,11 +1,11 @@
-import {renderHour} from "../src/renderers";
+import {testing} from "../src/renderers";
 import {weatherData} from "./test_data";
 
 describe('renderHour function', () => {
   it('renders weatherData.hourly.data', () => {
     debugger;
     const hourData = weatherData.hourly.data[1];
-    const returnValue = renderHour(hourData);
+    const returnValue = testing.renderHour(hourData);
     console.log(returnValue);
     expect(returnValue.trim()).toBe(expectedContent.trim());
   });

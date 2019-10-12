@@ -1,5 +1,5 @@
 import {LOCATIONS, save}        from "./storage";
-import {paintWeatherToViewport} from "./paint_ui";
+import {renderWeatherData} from "./renderers";
 
 const askLocation = () => {
   if (navigator.geolocation) {
@@ -38,7 +38,7 @@ const getWeatherDataNow = (lat, lng) => {
       .then((weatherData) => {
         //callback(myJson);
         save(LOCATIONS.WEATHER_DATA, weatherData);
-        paintWeatherToViewport(weatherData);
+        renderWeatherData(weatherData);
       })
       .catch((reason) => {
         console.error('There is a problem fetching the URL.', reason);

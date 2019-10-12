@@ -1,10 +1,10 @@
-import {renderHour} from "../renderers";
+import {testing} from "../renderers";
 import {weatherData} from "./test_dummy_data";
 
 function test_renderHour() {
   const hourData = weatherData.hourly.data[1];
 
-  const content = renderHour(hourData);
+  const content = testing.renderHour(hourData);
 
   console.log(content);
 }

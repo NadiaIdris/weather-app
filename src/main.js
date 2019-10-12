@@ -21,7 +21,7 @@ const main = () => {
 
 main();
 
-// test_all();
+test_all();
 
 //TODO:
 // - Add shadow to the whole weather details and summary
