@@ -196,7 +196,7 @@ i.search-icon {
 #all-weather-container {
   display: none;
   flex-grow: 1;
-  /*overflow-x: scroll;*/
+  overflow-x: hidden;
 }
 
 #all-weather-container:hover {
@@ -204,6 +204,7 @@ i.search-icon {
 }
 
 .all-hours-container {
+  overflow-y: hidden;
 }
 
 .all-hours-container:hover {
@@ -215,7 +216,7 @@ i.search-icon {
   flex-direction: column;
   min-width: 277px;
   background-color: #FFC700;
-  overflow-y: hidden;
+  /*overflow-y: hidden;*/
 }
 
 .center-overview {
@@ -291,7 +292,7 @@ i.search-icon {
 
 .hour-details {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 123px 123px;
   justify-content: space-between;
   max-height: 0;
   overflow: hidden;
