@@ -1,5 +1,6 @@
 import {calcHour, f2c, formatDate, getCurrentHour} from "./utils";
 import {addClickEventListeners, deleteElementBySelector} from "./paint_ui";
+import {load, LOCATIONS} from "./storage";
 
 /*
 Overview of WEATHER_DATA:
@@ -89,14 +90,12 @@ const renderWeatherData = (weatherData) => {
   for (let i = 0; i < weatherDailyArray.length; i++) {
     allWeatherContainer.innerHTML += renderDay(weatherData, i);
     addClickEventListeners();
-    if (hour > weatherData.hourly.data.length) {
-      const dayWeatherContainer = document.querySelectorAll('.day-weather-container')[i];
-      dayWeatherContainer.setAttribute('class', 'day-weather-container' +
-          ' center-overview');
-    }
-
+    // if (hour > weatherData.hourly.data.length) {
+    //   const dayWeatherContainer = document.querySelectorAll('.day-weather-container')[i];
+    //   dayWeatherContainer.setAttribute('class', 'day-weather-container' +
+    //       ' center-overview');
+    // }
   }
-
   resetGlobals();
 };
 
@@ -125,7 +124,12 @@ const renderDay = (weatherData, index) => {
 // Pass either weatherData.currently or
 // pass weatherData.daily.data
 const renderDayOverview = data => {
-  const date = formatDate(data.time);
+  let date = formatDate(data.time);
+  const weatherData = load(LOCATIONS.WEATHER_DATA);
+  // TODO: pass weatherData to renderDayOverview? I am currently loading
+  //  data from localStorage and it's expensive to do it this way.
+  if (data.time === weatherData.currently.time) date = 'Now';
+
   const icon = data.icon;
   const rightTemperatureF = data.temperature ? Math.round(data.temperature) :
       Math.round(data.temperatureHigh);
@@ -219,7 +223,7 @@ function renderHour(hourData) {
         <div class="hour-summary">
           <p>${hourToPrint}</p>
           <img class="small-icon" src="images/${icon}.svg">
-          <p>${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
+          <p class="text">${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
         </div>
 
         <div class="hour-details">
