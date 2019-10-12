@@ -64,15 +64,12 @@ Sample of weatherData.daily.data:
 let hour;
 let totalHoursLeft;
 
-
 function resetGlobals() {
   hour = 0;
-  totalHoursLeft = 0;
 }
 
 const renderWeatherData = (weatherData) => {
   resetGlobals();
-
   // Make a loop to paint as many days as I have the data.
   const weatherDailyArray = weatherData.daily.data;
 
@@ -90,11 +87,13 @@ const renderWeatherData = (weatherData) => {
   for (let i = 0; i < weatherDailyArray.length; i++) {
     allWeatherContainer.innerHTML += renderDay(weatherData, i);
     addClickEventListeners();
-    // if (hour > weatherData.hourly.data.length) {
-    //   const dayWeatherContainer = document.querySelectorAll('.day-weather-container')[i];
-    //   dayWeatherContainer.setAttribute('class', 'day-weather-container' +
-    //       ' center-overview');
-    // }
+    const dayWeatherContainer = document.querySelectorAll('.day-weather-container')[i];
+    const allHoursContainer = document.querySelectorAll('.all-hours-container')[i];
+
+    // If no hours left to print on viewport, center daily overview container.
+    if (!allHoursContainer) {
+      dayWeatherContainer.style.justifyContent = "center";
+    }
   }
   resetGlobals();
 };
@@ -117,6 +116,7 @@ const renderDay = (weatherData, index) => {
   if (weatherData.hourly.data){
     content += renderAllHoursPerDay(weatherData);
   }
+
   return `<div class="day-weather-container">${content}</div>`;
 };
 
@@ -158,7 +158,7 @@ const renderAllHoursPerDay = weatherData => {
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 0) {
     content += renderHour(currentWeather);
-    hour ++;
+    hour++;
   }
 
   // Increment the current weather hour by 1, because we have already
@@ -170,10 +170,9 @@ const renderAllHoursPerDay = weatherData => {
     content += renderHour(hourArray[hour]);
     hour++;
   }
-
   totalHoursLeft -= hoursLeftInADay;
 
-  return `<div class="all-hours-container">${content}</div>`;
+  return content === '' ? '' : `<div class="all-hours-container">${content}</div>`;
 };
 
 /*
