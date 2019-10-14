@@ -100,24 +100,36 @@ const renderWeatherData = (weatherData) => {
 
 const renderDay = (weatherData, index) => {
   let content = '';
+  let backgroundColor;
+  let temperatureC;
 
   function paintDayOverview() {
     // If it's day 1 (today), pass weatherData.currently to the function.
     // else pass weatherData.daily.data[1]
     if (hour === 0) {
+      // debugger;
       content += renderDayOverview(weatherData.currently);
+      const temperatureF = Math.round(weatherData.currently.apparentTemperature);
+      temperatureC = f2c(temperatureF);
+      backgroundColor = selectBackgroundColor(temperatureC);
     } else {
+      // debugger;
       content += renderDayOverview(weatherData.daily.data[index]);
+      const temperatureF = Math.round(weatherData.daily.data[index].temperatureHigh);
+      temperatureC = f2c(temperatureF);
+      backgroundColor = selectBackgroundColor(temperatureC);
     }
+    // return backgroundColor;
   }
 
   paintDayOverview();
   // If no hours left..... don't print them
   if (weatherData.hourly.data){
     content += renderAllHoursPerDay(weatherData);
+
   }
 
-  return `<div class="day-weather-container">${content}</div>`;
+  return `<div class="day-weather-container" style="background-color: ${backgroundColor}">${content}</div>`;
 };
 
 
@@ -134,9 +146,10 @@ const renderDayOverview = data => {
   const rightTemperatureF = data.temperature ? Math.round(data.temperature) :
       Math.round(data.temperatureHigh);
   const rightTemperatureC = f2c(rightTemperatureF);
+  const backgroundColor = selectBackgroundColor(rightTemperatureC);
 
   return `
-    <div class="overview-container">
+    <div class="overview-container" style="background-color: ${backgroundColor}">
       <h2 class="day-header">${date}</h2>
       <img class="large-icon" src="images/${icon}.svg">
       <div class="temperatures-container-large">
@@ -154,7 +167,7 @@ const renderAllHoursPerDay = weatherData => {
   const currentWeather = weatherData.currently;
   let content = "";
 
-  totalHoursLeft = hourArray.length;      //49
+  totalHoursLeft = hourArray.length;
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 0) {
     content += renderHour(currentWeather);
@@ -199,6 +212,28 @@ An "hour" of data looks like this:
 }
  */
 
+function selectBackgroundColor(temperatureC) {
+  let backgroundColor;
+  // Add correct weather to each hour and day overview.
+  if (temperatureC < -25) { backgroundColor = "#008FE0"; }
+  else if (temperatureC >= -25 && temperatureC < -20) { backgroundColor = "#009AF1"; }
+  else if (temperatureC >= -20 && temperatureC < -15) { backgroundColor = "#00A3FF"; }
+  else if (temperatureC >= -15 && temperatureC < -10) { backgroundColor = "#00AAF4"; }
+  else if (temperatureC >= -10 && temperatureC < -5) { backgroundColor = "#00B7F1"; }
+  else if (temperatureC >= -5 && temperatureC < 0) { backgroundColor = "#00C9F6"; }
+  else if (temperatureC >= 0 && temperatureC < 5) { backgroundColor = "#00D6E3"; }
+  else if (temperatureC >= 5 && temperatureC < 10) { backgroundColor = "#EFD702"; }
+  else if (temperatureC >= 10 && temperatureC < 15) { backgroundColor = "#FFC700"; }
+  else if (temperatureC >= 15 && temperatureC < 20) { backgroundColor = "#FFB800"; }
+  else if (temperatureC >= 20 && temperatureC < 25) { backgroundColor = "#FFA800"; }
+  else if (temperatureC >= 25 && temperatureC < 30) { backgroundColor = "#FF8A00"; }
+  else if (temperatureC >= 30 && temperatureC < 35) { backgroundColor = "#FF6B00"; }
+  else if (temperatureC >= 35 && temperatureC < 40) { backgroundColor = "#ED5500"; }
+  else if (temperatureC >= 40 && temperatureC < 45) { backgroundColor = "#E54500"; }
+  else if (temperatureC >= 45) { backgroundColor = "#D84100"; }
+  return backgroundColor;
+}
+
 function renderHour(hourData) {
   const hourEvaluated = calcHour(hourData.time);
   const icon = hourData.icon;
@@ -216,13 +251,15 @@ function renderHour(hourData) {
     hourToPrint = 'Midnight';
   }
 
+  const backgroundColor = selectBackgroundColor(temperatureC);
+
   let content =
       `  
-      <div class="hour-container">
+      <div class="hour-container" style="background-color: ${backgroundColor}">
         <div class="hour-summary">
-          <p>${hourToPrint}</p>
+          <p class="left-col">${hourToPrint}</p>
           <img class="small-icon" src="images/${icon}.svg">
-          <p class="text">${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
+          <p class="right-col">${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
         </div>
 
         <div class="hour-details">
@@ -231,14 +268,14 @@ function renderHour(hourData) {
             <p class="p-space">UV index</p>
             <p>Humidity</p>
             <p>Dew point</p>
-            <p class="p-space">Precipitation</p>
+            <p>Precipitation</p>
           </div>
           <div class="right-col">
             <p>${wind} mph</p>
             <p class="p-space">${uvIndex}</p>
             <p>${humidity}</p>
             <p>${dewPoint}</p>
-            <p class="p-space">${precipitation}</p>
+            <p>${precipitation}</p>
           </div>
         </div>
       </div>
