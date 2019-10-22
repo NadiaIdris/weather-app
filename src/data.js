@@ -1,4 +1,4 @@
-import {LOCATIONS, save}        from "./storage";
+import {LOCATIONS, save, load}        from "./storage";
 import {renderWeatherData} from "./renderers";
 
 const askLocation = () => {
@@ -38,7 +38,8 @@ const getWeatherDataNow = (lat, lng) => {
       .then((weatherData) => {
         //callback(myJson);
         save(LOCATIONS.WEATHER_DATA, weatherData);
-        renderWeatherData(weatherData);
+        if(!load(LOCATIONS.TEMP)) { save(LOCATIONS.TEMP, 'F')}
+        renderWeatherData(weatherData, load(LOCATIONS.TEMP));
       })
       .catch((reason) => {
         console.error('There is a problem fetching the URL.', reason);

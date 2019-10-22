@@ -243,12 +243,18 @@ i.search-icon {
   margin: 20px 0;
 }
 
-.temperatures-container-large {
+.temperature-container-large {
   display: flex;
   flex-direction: row;
   align-items: baseline;
   width: 130px;
   justify-content: space-between;
+}
+
+.temperature-container-small {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 .day-weather-container img {
@@ -272,6 +278,7 @@ i.search-icon {
 .not-selected-temp {
   font-size: 24px;
   order: 2;
+  cursor: pointer;
 }
 
 .c-temp {
@@ -282,6 +289,18 @@ i.search-icon {
 .f-temp {
   font-size: 14px;
   font-weight: 500;
+}
+
+.selected-temp-hourly {
+  order: 1;
+}
+
+.divider {
+  order: 2;
+}
+
+.not-selected-temp-hourly {
+  order: 3;
 }
 
 .hour-summary {
@@ -302,7 +321,7 @@ i.search-icon {
 
 .hour-details {
   display: grid;
-  grid-template-columns: 123px 123px;
+  grid-template-columns: 100px 146px;
   justify-content: flex-start;
   max-height: 0;
   overflow: hidden;

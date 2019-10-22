@@ -1,10 +1,12 @@
 /**
  * The following keys are stored in localStorage.
  */
+    //https://darksky.net/dev/docs
 const LOCATIONS = {
   WEATHER_DATA: "WEATHER_DATA",
   LAT         : "LAT",
-  LNG         : "LNG"
+  LNG         : "LNG",
+  TEMP        : "TEMP",
 };
 
 /**

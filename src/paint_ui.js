@@ -39,9 +39,11 @@ function paintEmptyState() {
 
 const paintLandingPage = () => {
   const weatherData = load(LOCATIONS.WEATHER_DATA);
+  const unitOfTemp = load(LOCATIONS.TEMP);
+
   if (weatherData) {
     // Found weather data in local storage, so paint it.
-    renderWeatherData(weatherData);
+    renderWeatherData(weatherData, unitOfTemp);
 
     // Refresh the weather for the location saved in localStorage.
     const lat = load(LOCATIONS.LAT);

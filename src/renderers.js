@@ -1,6 +1,6 @@
 import {calcHour, f2c, formatDate, getCurrentHour} from "./utils";
-import {addClickEventListeners, deleteElementBySelector} from "./paint_ui";
-import {load, LOCATIONS} from "./storage";
+import {addClickEventListeners, deleteElementBySelector, paintLandingPage} from "./paint_ui";
+import {load, LOCATIONS, save} from "./storage";
 
 /*
 Overview of WEATHER_DATA:
@@ -68,7 +68,111 @@ function resetGlobals() {
   hour = 0;
 }
 
-const renderWeatherData = (weatherData) => {
+// TODO: Move these functions to utils.js later -------------------------
+
+// function unselectTemp() {
+//   const allSelectedContainers = document.querySelectorAll('.selected-temp');
+//   const allNotSelectedContainers = document.querySelectorAll('.not-selected-temp');
+//   allSelectedContainers.forEach(elem => {
+//     elem.classList.toggle('selected-temp');
+//     elem.classList.toggle('not-selected-temp');
+//   });
+//   allNotSelectedContainers.forEach(elem => {
+//     elem.classList.toggle('not-selected-temp');
+//     elem.classList.toggle('selected-temp');
+//   });
+//
+// }
+
+function selectTemp() {
+  const allSelectedContainers = document.querySelectorAll('.selected-temp');
+  const allNotSelectedContainers = document.querySelectorAll('.not-selected-temp');
+
+  allNotSelectedContainers.forEach(elem => {
+    elem.classList.toggle('not-selected-temp');
+    elem.classList.toggle('selected-temp');
+  });
+
+  allSelectedContainers.forEach(elem => {
+    elem.classList.toggle('selected-temp');
+    elem.classList.toggle('not-selected-temp');
+  });
+
+  if (load(LOCATIONS.TEMP) === 'F') {
+    // Change TEMP in localStorage to C
+    save(LOCATIONS.TEMP, 'C');
+  } else {
+    save(LOCATIONS.TEMP, 'F');
+  }
+
+  paintLandingPage();
+}
+
+function selectBackgroundColor(temperatureC) {
+  let backgroundColor;
+  if (temperatureC < -25) { backgroundColor = "#008FE0"; }
+  else if (temperatureC >= -25 && temperatureC < -20) { backgroundColor = "#009AF1"; }
+  else if (temperatureC >= -20 && temperatureC < -15) { backgroundColor = "#00A3FF"; }
+  else if (temperatureC >= -15 && temperatureC < -10) { backgroundColor = "#00AAF4"; }
+  else if (temperatureC >= -10 && temperatureC < -5) { backgroundColor = "#00B7F1"; }
+  else if (temperatureC >= -5 && temperatureC < 0) { backgroundColor = "#00C9F6"; }
+  else if (temperatureC >= 0 && temperatureC < 5) { backgroundColor = "#00D6E3"; }
+  else if (temperatureC >= 5 && temperatureC < 10) { backgroundColor = "#EFD702"; }
+  else if (temperatureC >= 10 && temperatureC < 15) { backgroundColor = "#FFC700"; }
+  else if (temperatureC >= 15 && temperatureC < 20) { backgroundColor = "#FFB800"; }
+  else if (temperatureC >= 20 && temperatureC < 25) { backgroundColor = "#FFA800"; }
+  else if (temperatureC >= 25 && temperatureC < 30) { backgroundColor = "#FF8A00"; }
+  else if (temperatureC >= 30 && temperatureC < 35) { backgroundColor = "#FF6B00"; }
+  else if (temperatureC >= 35 && temperatureC < 40) { backgroundColor = "#ED5500"; }
+  else if (temperatureC >= 40 && temperatureC < 45) { backgroundColor = "#E54500"; }
+  else if (temperatureC >= 45) { backgroundColor = "#D84100"; }
+  return backgroundColor;
+}
+
+const windSpeedDescription = (windSpeedInKmPerHour) => {
+  let windDescription;
+  if (windSpeedInKmPerHour <=11) { windDescription = "Light"; }
+  else if (windSpeedInKmPerHour > 11 && windSpeedInKmPerHour <= 38) { windDescription = "Moderate"; }
+  else if (windSpeedInKmPerHour > 38 && windSpeedInKmPerHour <= 61) { windDescription = "Strong"; }
+  else if (windSpeedInKmPerHour > 61 && windSpeedInKmPerHour <= 88) { windDescription = "Very strong"; }
+  else if (windSpeedInKmPerHour > 88 && windSpeedInKmPerHour <= 117) { windDescription = "Extremely strong"; }
+  else if (windSpeedInKmPerHour > 117) { windDescription = "Hurricane"; }
+  return windDescription;
+};
+
+const calculateKm = (miles) => {
+  return Math.round(miles * 1.60934);
+};
+
+const miles2km = (miles) => {
+  const km = calculateKm(miles);
+  const speedDescription = windSpeedDescription(km);
+  // return `${speedDescription}, ${km} km/hr`;
+  return `${speedDescription}`;
+};
+
+const milesPerHour = (miles) => {
+  const m = Math.round(miles);
+  const km = calculateKm(m);
+  const speedDescription = windSpeedDescription(km);
+  // return `${speedDescription}, ${m} mph`;
+  return `${speedDescription}`;
+};
+
+const getUvIndexDescription = (uvIndex) => {
+  let description;
+  if (uvIndex >= 0 && uvIndex < 3) { description = "Low"; }
+  else if (uvIndex >= 3 && uvIndex < 6) { description = "Medium"; }
+  else if (uvIndex >= 6 && uvIndex < 8) { description = "High"; }
+  else if (uvIndex >= 8 && uvIndex < 11) { description = "Very high"; }
+  else if (uvIndex >= 11) { description = "Extreme"; }
+  return description;
+};
+
+//----------------------------------------------------------------
+
+
+const renderWeatherData = (weatherData, unit) => {
   resetGlobals();
   // Make a loop to paint as many days as I have the data.
   const weatherDailyArray = weatherData.daily.data;
@@ -85,7 +189,7 @@ const renderWeatherData = (weatherData) => {
   body.prepend(allWeatherContainer);
 
   for (let i = 0; i < weatherDailyArray.length; i++) {
-    allWeatherContainer.innerHTML += renderDay(weatherData, i);
+    allWeatherContainer.innerHTML += renderDay(weatherData, i, unit);
     addClickEventListeners();
     const dayWeatherContainer = document.querySelectorAll('.day-weather-container')[i];
     const allHoursContainer = document.querySelectorAll('.all-hours-container')[i];
@@ -95,10 +199,17 @@ const renderWeatherData = (weatherData) => {
       dayWeatherContainer.style.justifyContent = "center";
     }
   }
+
+
+  // const selectedTempInC = document.querySelectorAll('.selected-temp');
+  const notSelectedTemp = document.querySelectorAll('.not-selected-temp');
+  // selectedTempInC.forEach(elem => elem.addEventListener('click', unselectTemp));
+  notSelectedTemp.forEach(elem => elem.addEventListener('click', selectTemp));
+
   resetGlobals();
 };
 
-const renderDay = (weatherData, index) => {
+const renderDay = (weatherData, index, unit) => {
   let content = '';
   let backgroundColor;
   let temperatureC;
@@ -107,26 +218,24 @@ const renderDay = (weatherData, index) => {
     // If it's day 1 (today), pass weatherData.currently to the function.
     // else pass weatherData.daily.data[1]
     if (hour === 0) {
-      // debugger;
-      content += renderDayOverview(weatherData.currently);
+      content += renderDayOverview(weatherData.currently, unit);
+      // Paint the background color
       const temperatureF = Math.round(weatherData.currently.apparentTemperature);
       temperatureC = f2c(temperatureF);
       backgroundColor = selectBackgroundColor(temperatureC);
     } else {
-      // debugger;
-      content += renderDayOverview(weatherData.daily.data[index]);
+      content += renderDayOverview(weatherData.daily.data[index], unit);
+      // Paint the background color
       const temperatureF = Math.round(weatherData.daily.data[index].temperatureHigh);
       temperatureC = f2c(temperatureF);
       backgroundColor = selectBackgroundColor(temperatureC);
     }
-    // return backgroundColor;
   }
 
   paintDayOverview();
   // If no hours left..... don't print them
   if (weatherData.hourly.data){
     content += renderAllHoursPerDay(weatherData);
-
   }
 
   return `<div class="day-weather-container" style="background-color: ${backgroundColor}">${content}</div>`;
@@ -135,7 +244,7 @@ const renderDay = (weatherData, index) => {
 
 // Pass either weatherData.currently or
 // pass weatherData.daily.data
-const renderDayOverview = data => {
+const renderDayOverview = (data, unit) => {
   let date = formatDate(data.time);
   const weatherData = load(LOCATIONS.WEATHER_DATA);
   // TODO: pass weatherData to renderDayOverview? I am currently loading
@@ -143,18 +252,23 @@ const renderDayOverview = data => {
   if (data.time === weatherData.currently.time) date = 'Now';
 
   const icon = data.icon;
-  const rightTemperatureF = data.temperature ? Math.round(data.temperature) :
+  const ifTempFSelected = unit === 'F' ? "selected-temp" : "not-selected-temp";
+  const ifTempCSelected = unit === 'C' ? "selected-temp" : "not-selected-temp";
+
+  // Generate day background color.
+  const temperatureF = data.temperature ? Math.round(data.temperature) :
       Math.round(data.temperatureHigh);
-  const rightTemperatureC = f2c(rightTemperatureF);
-  const backgroundColor = selectBackgroundColor(rightTemperatureC);
+  const temperatureC = f2c(temperatureF);
+  const backgroundColor = selectBackgroundColor(temperatureC);
+
 
   return `
     <div class="overview-container" style="background-color: ${backgroundColor}">
       <h2 class="day-header">${date}</h2>
       <img class="large-icon" src="images/${icon}.svg">
-      <div class="temperatures-container-large">
-        <p class="selected-temp">${rightTemperatureC}<span class="c-temp">&#8451;</span></p>
-        <p class="not-selected-temp">${rightTemperatureF}<span class="f-temp">&#8457;</span></p>
+      <div class="temperature-container-large">
+        <p class="${ifTempFSelected}">${temperatureF}<span class="f-temp">&#8457;</span></p>
+        <p class="${ifTempCSelected}">${temperatureC}<span class="c-temp">&#8451;</span></p>
       </div>
     </div>
   `;
@@ -212,46 +326,30 @@ An "hour" of data looks like this:
 }
  */
 
-function selectBackgroundColor(temperatureC) {
-  let backgroundColor;
-  // Add correct weather to each hour and day overview.
-  if (temperatureC < -25) { backgroundColor = "#008FE0"; }
-  else if (temperatureC >= -25 && temperatureC < -20) { backgroundColor = "#009AF1"; }
-  else if (temperatureC >= -20 && temperatureC < -15) { backgroundColor = "#00A3FF"; }
-  else if (temperatureC >= -15 && temperatureC < -10) { backgroundColor = "#00AAF4"; }
-  else if (temperatureC >= -10 && temperatureC < -5) { backgroundColor = "#00B7F1"; }
-  else if (temperatureC >= -5 && temperatureC < 0) { backgroundColor = "#00C9F6"; }
-  else if (temperatureC >= 0 && temperatureC < 5) { backgroundColor = "#00D6E3"; }
-  else if (temperatureC >= 5 && temperatureC < 10) { backgroundColor = "#EFD702"; }
-  else if (temperatureC >= 10 && temperatureC < 15) { backgroundColor = "#FFC700"; }
-  else if (temperatureC >= 15 && temperatureC < 20) { backgroundColor = "#FFB800"; }
-  else if (temperatureC >= 20 && temperatureC < 25) { backgroundColor = "#FFA800"; }
-  else if (temperatureC >= 25 && temperatureC < 30) { backgroundColor = "#FF8A00"; }
-  else if (temperatureC >= 30 && temperatureC < 35) { backgroundColor = "#FF6B00"; }
-  else if (temperatureC >= 35 && temperatureC < 40) { backgroundColor = "#ED5500"; }
-  else if (temperatureC >= 40 && temperatureC < 45) { backgroundColor = "#E54500"; }
-  else if (temperatureC >= 45) { backgroundColor = "#D84100"; }
-  return backgroundColor;
-}
-
 function renderHour(hourData) {
   const hourEvaluated = calcHour(hourData.time);
   const icon = hourData.icon;
   const temperatureF = Math.round(hourData.temperature);
   const temperatureC = f2c(temperatureF);
-  const wind = hourData.windSpeed;
-  const uvIndex = hourData.uvIndex;
-  const humidity = hourData.humidity;
-  const dewPoint = hourData.dewPoint;
-  const precipitation = hourData.precipProbability;
+  let wind;
+  const windInMiles = milesPerHour(hourData.windSpeed);
+  const windInKm = miles2km(hourData.windSpeed);
+  const uvIndex = getUvIndexDescription(hourData.uvIndex);
+  const humidity = Math.round(hourData.humidity * 100);
+  const dewPoint = Math.round(hourData.dewPoint);
+  const precipitation = Math.round(hourData.precipProbability);
   // const sunrise     = calcTime(dailyData.sunriseTime);
   // const sunset     = calcTime(dailyData.sunsetTime);
+
+  // Hours that are displayed as description of time instead of a number.
   let hourToPrint = hour === 0 ? "Now" : hourEvaluated;
-  if(hourEvaluated === '0 AM') {
-    hourToPrint = 'Midnight';
-  }
+  if (hourEvaluated === '0 AM') { hourToPrint = 'Midnight'; }
+  if (hourEvaluated === '12 PM') { hourToPrint = 'Noon'; }
 
   const backgroundColor = selectBackgroundColor(temperatureC);
+  wind = load(LOCATIONS.TEMP) === 'F' ? windInMiles : windInKm;
+  const selectedTempHourlyF = load(LOCATIONS.TEMP) === 'F' ? "selected-temp-hourly" : "not-selected-temp-hourly";
+  const selectedTempHourlyC = load(LOCATIONS.TEMP) === 'C' ? "selected-temp-hourly" : "not-selected-temp-hourly";
 
   let content =
       `  
@@ -259,7 +357,12 @@ function renderHour(hourData) {
         <div class="hour-summary">
           <p class="left-col">${hourToPrint}</p>
           <img class="small-icon" src="images/${icon}.svg">
-          <p class="right-col">${temperatureC}<span>&#176;</span>/${temperatureF}<span>&#176;</span></p>
+          <div class="temperature-container-small right-col">
+             <p class="${selectedTempHourlyF}">${temperatureF}<span>&#176;</span></p>
+             <p class="divider">/</p>
+             <p class="${selectedTempHourlyC}">${temperatureC}<span>&#176;</span></p>
+          </div>
+       
         </div>
 
         <div class="hour-details">
@@ -271,11 +374,11 @@ function renderHour(hourData) {
             <p>Precipitation</p>
           </div>
           <div class="right-col">
-            <p>${wind} mph</p>
+            <p>${wind}</p>
             <p class="p-space">${uvIndex}</p>
-            <p>${humidity}</p>
-            <p>${dewPoint}</p>
-            <p>${precipitation}</p>
+            <p>${humidity}%</p>
+            <p>${dewPoint}<span>&#176;</span></p>
+            <p>${precipitation}%</p>
           </div>
         </div>
       </div>
