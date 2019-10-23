@@ -6,6 +6,7 @@ import {
   showPopUp,
 }                    from "./paint_ui";
 import {test_all} from "./test/test_all";
+import {LOCATIONS, save} from "./storage";
 
 const attachListeners = () => {
   const myLocationIcon = document.querySelector('#my-location');
@@ -26,7 +27,8 @@ const initializePlacesApi = () => {
     const suggestion = e.suggestion;
     const lat = suggestion.latlng.lat;
     const lng = suggestion.latlng.lng;
-    const name = suggestion.name;
+    const city = suggestion.name;
+    save(LOCATIONS.CITY, city);
     getWeatherDataNow(lat, lng);
   });
 };
