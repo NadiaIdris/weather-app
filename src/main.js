@@ -1,4 +1,4 @@
-import {askLocation} from "./data";
+import {askLocation, getWeatherDataNow} from "./data";
 import {
   addClickEventListeners,
   hidePopUp,
@@ -14,14 +14,33 @@ const attachListeners = () => {
   myLocationIcon.addEventListener('mouseout', hidePopUp);
 };
 
+const initializePlacesApi = () => {
+  var places = require('places.js');
+  var placesAutocomplete = places({
+    appId: 'pl8HQG0189VY',
+    apiKey: '2563ab38a8ce07a8f0c9081eac73122e',
+    container: document.querySelector('#search-box')
+  });
+
+  placesAutocomplete.on('change', e => {
+    const suggestion = e.suggestion;
+    const lat = suggestion.latlng.lat;
+    const lng = suggestion.latlng.lng;
+    const name = suggestion.name;
+    getWeatherDataNow(lat, lng);
+  });
+};
+
 const main = () => {
   attachListeners();
   paintLandingPage();
+  initializePlacesApi();
 };
 
 main();
 
 //test_all();
+
 
 //TODO:
 // - Add shadow to the whole weather details and summary

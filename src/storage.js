@@ -7,6 +7,7 @@ const LOCATIONS = {
   LAT         : "LAT",
   LNG         : "LNG",
   TEMP        : "TEMP",
+  CITY        : "CITY",
 };
 
 /**

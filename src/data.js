@@ -6,11 +6,15 @@ const askLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
       const lng = position.coords.longitude;
       const lat = position.coords.latitude;
-      // Save the lat, lng pair to LocalStorage for use later.
-      save(LOCATIONS.LAT, lat);
-      save(LOCATIONS.LNG, lng);
-      // Fetch data from DarkSky API.
-      getWeatherDataNow(lat, lng);
+      fetchReverseGeocode(position).then((placeData)=>{
+
+        const city = placeData.address.city;
+        save(LOCATIONS.CITY, city);
+        console.log(city);
+        // Fetch data from DarkSky API.
+        // TODO: Pass argument `city` to getWeatherDataNow
+        getWeatherDataNow(lat, lng);
+      });
     })
   }
   else {
@@ -20,12 +24,31 @@ const askLocation = () => {
   }
 };
 
+const getLatLngFromPosition = (position) => {
+  if (!position) return;
+  return {lat: position.coords.latitude, lng: position.coords.longitude};
+};
+
+const fetchReverseGeocode = async (position) => {
+  const format = 'jsonv2';
+  const latLng = getLatLngFromPosition(position);
+  const url = `https://nominatim.openstreetmap.org/reverse?format=${
+      format}&lat=${latLng.lat}&lon=${latLng.lng}`;
+  return await fetch(url)
+      .then((response) => response.json())
+      .then((json) => json);
+};
+
 const getWeatherDataNow = (lat, lng) => {
   if (!lat || !lng) {
     console.warn("Can't get weather, since null arguments were" +
                      " passed for lat or lng!");
     return;
   }
+
+  // Save the lat, lng pair to LocalStorage for use later.
+  save(LOCATIONS.LAT, lat);
+  save(LOCATIONS.LNG, lng);
 
   const API_KEY     = '6eae3396dc3311cb103d2f86f03d5775';
   const url         = `https://api.darksky.net/forecast/${API_KEY}/${lat},${lng}?exclude=minutely`;
