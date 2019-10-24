@@ -15,22 +15,33 @@ const calcTime = unixTime => {
   }
 };
 
-const calcHour = unixTime => {
+const calcHour = (unixTime, offset) => {
+  // debugger;
   const date = new Date(unixTime * 1000);
-  const hours = date.getHours();
+  let hoursLeft = date.getUTCHours() + offset;  //1-7=-6  should be 18
+
+  if (hoursLeft < 0) {
+    hoursLeft = 24 + hoursLeft;
+  }
   // If hours is more than 12, then it's PM, else it's AM.
-  if (hours > 12) {
-    return `${hours - 12} PM`;
-  } else if (hours === 12) {
-    return `${hours} PM`;
+  if (hoursLeft >= 24) {
+    return `${hoursLeft - 24} AM`;
+  } else if(hoursLeft > 12) {
+    return `${hoursLeft - 12} PM`;
+  } else if (hoursLeft === 12) {
+    return `${hoursLeft} PM`;
   } else {
-    return `${hours} AM`;
+    return `${hoursLeft} AM`;
   }
 };
 
-const getCurrentHour = unixTime => {
+const getCurrentHour = (unixTime, offset) => {
   const date = new Date(unixTime * 1000);
-  const hours = date.getHours();
+  let hours = date.getUTCHours() + offset;
+  if (hours < 0) {
+    hours = 24 + hours;
+  }
+
   return hours;
 };
 

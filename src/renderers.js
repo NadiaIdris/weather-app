@@ -174,7 +174,6 @@ const getUvIndexDescription = (uvIndex) => {
 
 const renderWeatherData = (weatherData, unit) => {
   resetGlobals();
-  // Make a loop to paint as many days as I have the data.
   const weatherDailyArray = weatherData.daily.data;
 
   // Reset the DOM.
@@ -231,13 +230,11 @@ const renderDay = (weatherData, index, unit) => {
       backgroundColor = selectBackgroundColor(temperatureC);
     }
   }
-
   paintDayOverview();
-  // If no hours left..... don't print them
+
   if (weatherData.hourly.data){
     content += renderAllHoursPerDay(weatherData);
   }
-
   return `<div class="day-weather-container" style="background-color: ${backgroundColor}">${content}</div>`;
 };
 
@@ -284,17 +281,17 @@ const renderAllHoursPerDay = weatherData => {
   totalHoursLeft = hourArray.length;
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 0) {
-    content += renderHour(currentWeather);
+    content += renderHour(currentWeather, weatherData.offset);
     hour++;
   }
 
   // Increment the current weather hour by 1, because we have already
   // printed the current weather hour on the viewport.
-  const currentHour = hour === 1 ? (getCurrentHour(currentWeather.time) + 1) : 0; //17
+  const currentHour = hour === 1 ? (getCurrentHour(currentWeather.time, weatherData.offset) + 1) : 0;
   const hoursInADay = 24;
-  const hoursLeftInADay = hoursInADay - currentHour;          // 24-17 = 7
+  const hoursLeftInADay = hoursInADay - currentHour;
   for (let i = 0; i < hoursLeftInADay && hour < hourArray.length; i++) {
-    content += renderHour(hourArray[hour]);
+    content += renderHour(hourArray[hour], weatherData.offset);
     hour++;
   }
   totalHoursLeft -= hoursLeftInADay;
@@ -326,8 +323,8 @@ An "hour" of data looks like this:
 }
  */
 
-function renderHour(hourData) {
-  const hourEvaluated = calcHour(hourData.time);
+function renderHour(hourData, offset) {
+  const hourEvaluated = calcHour(hourData.time, offset);
   const icon = hourData.icon;
   const temperatureF = Math.round(hourData.temperature);
   const temperatureC = f2c(temperatureF);
@@ -337,11 +334,8 @@ function renderHour(hourData) {
   const uvIndex = getUvIndexDescription(hourData.uvIndex);
   const humidity = Math.round(hourData.humidity * 100);
   const dewPoint = Math.round(hourData.dewPoint);
-  const precipitation = Math.round(hourData.precipProbability);
-  // const sunrise     = calcTime(dailyData.sunriseTime);
-  // const sunset     = calcTime(dailyData.sunsetTime);
+  const precipitation = Math.round(hourData.precipProbability *100);
 
-  // Hours that are displayed as description of time instead of a number.
   let hourToPrint = hour === 0 ? "Now" : hourEvaluated;
   if (hourEvaluated === '0 AM') { hourToPrint = 'Midnight'; }
   if (hourEvaluated === '12 PM') { hourToPrint = 'Noon'; }

@@ -6,7 +6,7 @@ import {
   showPopUp,
 }                    from "./paint_ui";
 import {test_all} from "./test/test_all";
-import {LOCATIONS, save} from "./storage";
+import {LOCATIONS, save, load} from "./storage";
 
 const attachListeners = () => {
   const myLocationIcon = document.querySelector('#my-location');
@@ -15,28 +15,31 @@ const attachListeners = () => {
   myLocationIcon.addEventListener('mouseout', hidePopUp);
 };
 
+// TODO: remove Places API, because I am not converting
 const initializePlacesApi = () => {
   var places = require('places.js');
   var placesAutocomplete = places({
     appId: 'pl8HQG0189VY',
     apiKey: '2563ab38a8ce07a8f0c9081eac73122e',
-    container: document.querySelector('#search-box')
+    container: document.querySelector('#search-box'),
   });
 
   placesAutocomplete.on('change', e => {
     const suggestion = e.suggestion;
     const lat = suggestion.latlng.lat;
     const lng = suggestion.latlng.lng;
-    const city = suggestion.name;
+    const name = suggestion.name;
+    const area = suggestion.administrative;
+    const city = `${name}, ${area}`;
     save(LOCATIONS.CITY, city);
     getWeatherDataNow(lat, lng);
   });
 };
 
 const main = () => {
+  initializePlacesApi();
   attachListeners();
   paintLandingPage();
-  initializePlacesApi();
 };
 
 main();

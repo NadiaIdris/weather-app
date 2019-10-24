@@ -49,6 +49,11 @@ const paintLandingPage = () => {
     const lat = load(LOCATIONS.LAT);
     const lng = load(LOCATIONS.LNG);
     getWeatherDataNow(lat, lng);
+
+    if (load(LOCATIONS.CITY)) {
+      const searchBox = document.querySelector('#search-box');
+      searchBox.value = load(LOCATIONS.CITY);
+    }
   }
   else {
     paintEmptyState();

@@ -14,6 +14,10 @@ const askLocation = () => {
         // Fetch data from DarkSky API.
         // TODO: Pass argument `city` to getWeatherDataNow
         getWeatherDataNow(lat, lng);
+        if (load(LOCATIONS.CITY)) {
+          const searchBox = document.querySelector('#search-box');
+          searchBox.value = load(LOCATIONS.CITY);
+        }
       });
     })
   }

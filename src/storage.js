@@ -15,7 +15,7 @@ const LOCATIONS = {
  */
 const save = (key, weatherData) => {
   localStorage.setItem(key, JSON.stringify(weatherData));
-  console.log(`Data for key "${key}" saved to localStorage`);
+  // console.log(`Data for key "${key}" saved to localStorage`);
 };
 
 /**
@@ -28,7 +28,7 @@ const load = (key) => {
     console.warn(`Data for key "${key}" not found in localStorage`);
     return;
   }
-  console.log(`Data for key "${key}" loaded from localStorage`, dataFromStorage);
+  // console.log(`Data for key "${key}" loaded from localStorage`, dataFromStorage);
   return dataFromStorage;
 };
 
