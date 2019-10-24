@@ -217,13 +217,13 @@ const renderDay = (weatherData, index, unit) => {
     // If it's day 1 (today), pass weatherData.currently to the function.
     // else pass weatherData.daily.data[1]
     if (hour === 0) {
-      content += renderDayOverview(weatherData.currently, unit);
+      content += renderDayOverview(weatherData.currently, unit, weatherData.offset);
       // Paint the background color
       const temperatureF = Math.round(weatherData.currently.apparentTemperature);
       temperatureC = f2c(temperatureF);
       backgroundColor = selectBackgroundColor(temperatureC);
     } else {
-      content += renderDayOverview(weatherData.daily.data[index], unit);
+      content += renderDayOverview(weatherData.daily.data[index], unit, weatherData.offset);
       // Paint the background color
       const temperatureF = Math.round(weatherData.daily.data[index].temperatureHigh);
       temperatureC = f2c(temperatureF);
@@ -241,8 +241,8 @@ const renderDay = (weatherData, index, unit) => {
 
 // Pass either weatherData.currently or
 // pass weatherData.daily.data
-const renderDayOverview = (data, unit) => {
-  let date = formatDate(data.time);
+const renderDayOverview = (data, unit, offset) => {
+  let date = formatDate(data.time, offset);
   const weatherData = load(LOCATIONS.WEATHER_DATA);
   // TODO: pass weatherData to renderDayOverview? I am currently loading
   //  data from localStorage and it's expensive to do it this way.
@@ -336,9 +336,9 @@ function renderHour(hourData, offset) {
   const dewPoint = Math.round(hourData.dewPoint);
   const precipitation = Math.round(hourData.precipProbability *100);
 
-  let hourToPrint = hour === 0 ? "Now" : hourEvaluated;
-  if (hourEvaluated === '0 AM') { hourToPrint = 'Midnight'; }
-  if (hourEvaluated === '12 PM') { hourToPrint = 'Noon'; }
+  let hourToPrint = hour === 0 || hour === 0 && hourEvaluated === '0 AM' ? "Now" : hourEvaluated;
+  if (hourEvaluated === '0 AM' && hour !== 0) { hourToPrint = 'Midnight'; }
+  if (hourEvaluated === '12 PM' && hour !== 0) { hourToPrint = 'Noon'; }
 
   const backgroundColor = selectBackgroundColor(temperatureC);
   wind = load(LOCATIONS.TEMP) === 'F' ? windInMiles : windInKm;
