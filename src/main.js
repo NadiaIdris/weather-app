@@ -22,17 +22,22 @@ const initializePlacesApi = () => {
     appId: 'pl8HQG0189VY',
     apiKey: '2563ab38a8ce07a8f0c9081eac73122e',
     container: document.querySelector('#search-box'),
+    templates: {
+      value: function (suggestion) {
+        return `${suggestion.name}`;
+      }
+    }
   });
 
   placesAutocomplete.on('change', e => {
     const suggestion = e.suggestion;
     const lat = suggestion.latlng.lat;
     const lng = suggestion.latlng.lng;
-    const name = suggestion.name;
-    const area = suggestion.administrative;
-    const city = `${name}, ${area}`;
-    save(LOCATIONS.CITY, city);
+    const searchBox = document.querySelector('#search-box');
+    const city = suggestion.value;
+    searchBox.textContent = city;
     getWeatherDataNow(lat, lng);
+    save(LOCATIONS.CITY, city);
   });
 };
 
