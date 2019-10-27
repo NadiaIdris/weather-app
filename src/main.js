@@ -9,7 +9,6 @@ const attachListeners = () => {
   myLocationIcon.addEventListener('mouseout', hidePopUp);
 };
 
-// TODO: remove Places API, because I am not converting
 const initializePlacesApi = () => {
   const places = require('places.js');
   const searchBox = document.querySelector('#search-box');
@@ -30,6 +29,7 @@ const initializePlacesApi = () => {
     const lng = suggestion.latlng.lng;
     const city = suggestion.value;
     searchBox.textContent = city;
+    searchBox.style.fontWeight = '900';
     getWeatherDataNow(lat, lng);
     save(LOCATIONS.CITY, city);
     searchBox.blur();
@@ -47,6 +47,3 @@ main();
 //test_all();
 
 
-//TODO:
-// - Add shadow to the whole weather details and summary
-//   section. Potentially use toggle and a CSS class to do this.
