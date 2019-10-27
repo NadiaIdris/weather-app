@@ -1,12 +1,6 @@
 import {askLocation, getWeatherDataNow} from "./data";
-import {
-  addClickEventListeners,
-  hidePopUp,
-  paintLandingPage,
-  showPopUp,
-}                    from "./paint_ui";
-import {test_all} from "./test/test_all";
-import {LOCATIONS, save, load} from "./storage";
+import {hidePopUp, paintLandingPage, showPopUp,} from "./paint_ui";
+import {LOCATIONS, save} from "./storage";
 
 const attachListeners = () => {
   const myLocationIcon = document.querySelector('#my-location');
@@ -17,8 +11,9 @@ const attachListeners = () => {
 
 // TODO: remove Places API, because I am not converting
 const initializePlacesApi = () => {
-  var places = require('places.js');
-  var placesAutocomplete = places({
+  const places = require('places.js');
+  const searchBox = document.querySelector('#search-box');
+  const placesAutocomplete = places({
     appId: 'pl8HQG0189VY',
     apiKey: '2563ab38a8ce07a8f0c9081eac73122e',
     container: document.querySelector('#search-box'),
@@ -33,11 +28,11 @@ const initializePlacesApi = () => {
     const suggestion = e.suggestion;
     const lat = suggestion.latlng.lat;
     const lng = suggestion.latlng.lng;
-    const searchBox = document.querySelector('#search-box');
     const city = suggestion.value;
     searchBox.textContent = city;
     getWeatherDataNow(lat, lng);
     save(LOCATIONS.CITY, city);
+    searchBox.blur();
   });
 };
 
