@@ -114,6 +114,9 @@ p {
 
 .link-to-website a {
   text-decoration: none;
+  color: black;
+  font-weight: 900;
+  font-size: 19px;
 }
 
 .search-icon {
@@ -147,8 +150,8 @@ i.search-icon {
 
 #overlay {
   position: fixed; /* Sit on top of the page content */
-  /*display: none; !* Hidden by default *!*/
-  display: flex;
+  display: none; /* Hidden by default */
+  /*display: flex;*/
   width: 100%; /* Full width (cover the whole page) */
   height: 100%; /* Full height (cover the whole page) */
   top: 0;
@@ -172,6 +175,22 @@ i.search-icon {
 
 #overlay-img {
   border-radius: 5px;
+  align-self: center;
+}
+
+#close {
+  align-self: flex-end;
+  margin: 10px 10px 0 10px;
+}
+
+#overlay-text {
+  text-align: center;
+  max-width: 450px;
+  align-self: center;
+}
+
+.space-after-p {
+  margin-bottom: 25px;
 }
 
 /* First time landing page design */

@@ -37,9 +37,15 @@ const askLocation = () => {
 
 const giveAccess = () => {
   if (load(CONSTANTS.ACCESS) === CONSTANTS.DENIED) {
-    alert("Here will be a popup describing how to give access");
+    const overlay = document.querySelector('#overlay');
+    overlay.style.display = 'flex';
+  }
+};
 
-
+const closeOverlay = () => {
+  const overlay = document.querySelector('#overlay');
+  if (overlay.style.display === 'flex') {
+    overlay.style.display = 'none';
   }
 };
 
@@ -88,4 +94,4 @@ const getWeatherDataNow = (lat, lng) => {
       });
 };
 
-export {askLocation, getWeatherDataNow, giveAccess};
+export {askLocation, getWeatherDataNow, giveAccess, closeOverlay};
