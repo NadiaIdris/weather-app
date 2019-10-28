@@ -1,12 +1,12 @@
 import {askLocation, getWeatherDataNow} from "./data";
 import {hidePopUp, paintLandingPage, showPopUp,} from "./paint_ui";
-import {LOCATIONS, save} from "./storage";
+import {CONSTANTS, save} from "./storage";
 
 const attachListeners = () => {
   const myLocationIcon = document.querySelector('#my-location');
-  myLocationIcon.addEventListener('click', askLocation);
   myLocationIcon.addEventListener('mouseover', showPopUp);
   myLocationIcon.addEventListener('mouseout', hidePopUp);
+  myLocationIcon.addEventListener('click', askLocation);
 };
 
 const initializePlacesApi = () => {
@@ -31,7 +31,7 @@ const initializePlacesApi = () => {
     searchBox.textContent = city;
     searchBox.style.fontWeight = '900';
     getWeatherDataNow(lat, lng);
-    save(LOCATIONS.CITY, city);
+    save(CONSTANTS.CITY, city);
     searchBox.blur();
   });
 };

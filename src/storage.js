@@ -2,12 +2,17 @@
  * The following keys are stored in localStorage.
  */
     //https://darksky.net/dev/docs
-const LOCATIONS = {
+const CONSTANTS = {
   WEATHER_DATA: "WEATHER_DATA",
   LAT         : "LAT",
   LNG         : "LNG",
   TEMP        : "TEMP",
+  F           : "F",
+  C           : "C",
   CITY        : "CITY",
+  ACCESS      : "ACCESS",
+  GRANTED     : "GRANTED",
+  DENIED      : "DENIED",
 };
 
 /**
@@ -32,4 +37,4 @@ const load = (key) => {
   return dataFromStorage;
 };
 
-export {save, load, LOCATIONS};
+export {save, load, CONSTANTS};

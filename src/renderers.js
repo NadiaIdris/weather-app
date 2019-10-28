@@ -1,6 +1,6 @@
 import {calcHour, f2c, formatDate, getCurrentHour} from "./utils";
 import {addClickEventListeners, deleteElementBySelector, paintLandingPage} from "./paint_ui";
-import {load, LOCATIONS, save} from "./storage";
+import {load, CONSTANTS, save} from "./storage";
 
 /*
 Overview of WEATHER_DATA:
@@ -98,11 +98,11 @@ function selectTemp() {
     elem.classList.toggle('not-selected-temp');
   });
 
-  if (load(LOCATIONS.TEMP) === 'F') {
+  if (load(CONSTANTS.TEMP) === CONSTANTS.F) {
     // Change TEMP in localStorage to C
-    save(LOCATIONS.TEMP, 'C');
+    save(CONSTANTS.TEMP, CONSTANTS.C);
   } else {
-    save(LOCATIONS.TEMP, 'F');
+    save(CONSTANTS.TEMP, CONSTANTS.F);
   }
 
   paintLandingPage();
@@ -243,14 +243,14 @@ const renderDay = (weatherData, index, unit) => {
 // pass weatherData.daily.data
 const renderDayOverview = (data, unit, offset) => {
   let date = formatDate(data.time, offset);
-  const weatherData = load(LOCATIONS.WEATHER_DATA);
+  const weatherData = load(CONSTANTS.WEATHER_DATA);
   // TODO: pass weatherData to renderDayOverview? I am currently loading
   //  data from localStorage and it's expensive to do it this way.
   if (data.time === weatherData.currently.time) date = 'Now';
 
   const icon = data.icon;
-  const ifTempFSelected = unit === 'F' ? "selected-temp" : "not-selected-temp";
-  const ifTempCSelected = unit === 'C' ? "selected-temp" : "not-selected-temp";
+  const ifTempFSelected = unit === CONSTANTS.F ? "selected-temp" : "not-selected-temp";
+  const ifTempCSelected = unit === CONSTANTS.C ? "selected-temp" : "not-selected-temp";
 
   // Generate day background color.
   const temperatureF = data.temperature ? Math.round(data.temperature) :
@@ -341,9 +341,9 @@ function renderHour(hourData, offset) {
   if (hourEvaluated === '12 PM' && hour !== 0) { hourToPrint = 'Noon'; }
 
   const backgroundColor = selectBackgroundColor(temperatureC);
-  wind = load(LOCATIONS.TEMP) === 'F' ? windInMiles : windInKm;
-  const selectedTempHourlyF = load(LOCATIONS.TEMP) === 'F' ? "selected-temp-hourly" : "not-selected-temp-hourly";
-  const selectedTempHourlyC = load(LOCATIONS.TEMP) === 'C' ? "selected-temp-hourly" : "not-selected-temp-hourly";
+  wind = load(CONSTANTS.TEMP) === CONSTANTS.F ? windInMiles : windInKm;
+  const selectedTempHourlyF = load(CONSTANTS.TEMP) === CONSTANTS.F ? "selected-temp-hourly" : "not-selected-temp-hourly";
+  const selectedTempHourlyC = load(CONSTANTS.TEMP) === CONSTANTS.C ? "selected-temp-hourly" : "not-selected-temp-hourly";
 
   let content =
       `  

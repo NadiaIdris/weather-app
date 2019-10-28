@@ -179,8 +179,8 @@ i.search-icon {
   padding-bottom: 2px;
 }
 
+
 #pop-up {
-  display: none;
   width: 335px;
   height: 304px;
   background-color: var(--white);
@@ -188,6 +188,8 @@ i.search-icon {
   bottom: 70px;
   left: 61px;
   border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
 #pop-up img {

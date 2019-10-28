@@ -1,16 +1,20 @@
-import {load, LOCATIONS} from "./storage";
+import {load, CONSTANTS} from "./storage";
 import {getWeatherDataNow} from "./data";
 import {renderWeatherData} from "./renderers";
 
 
 const showPopUp = () => {
-  const popUp         = document.querySelector('#pop-up');
-  popUp.style.display = 'block';
+  if (!load(CONSTANTS.ACCESS)) {
+    const popUp         = document.querySelector('#pop-up');
+    popUp.style.opacity = '1';
+  }
 };
 
 const hidePopUp = () => {
   const popUp         = document.querySelector('#pop-up');
-  popUp.style.display = 'none';
+  if (popUp) {
+    popUp.style.opacity = '0';
+  }
 };
 
 function paintEmptyState() {
@@ -38,24 +42,23 @@ function paintEmptyState() {
 }
 
 const paintLandingPage = () => {
-  const weatherData = load(LOCATIONS.WEATHER_DATA);
-  const unitOfTemp = load(LOCATIONS.TEMP);
+  const weatherData = load(CONSTANTS.WEATHER_DATA);
+  const unitOfTemp = load(CONSTANTS.TEMP);
 
   if (weatherData) {
     // Found weather data in local storage, so paint it.
     renderWeatherData(weatherData, unitOfTemp);
 
     // Refresh the weather for the location saved in localStorage.
-    const lat = load(LOCATIONS.LAT);
-    const lng = load(LOCATIONS.LNG);
+    const lat = load(CONSTANTS.LAT);
+    const lng = load(CONSTANTS.LNG);
     getWeatherDataNow(lat, lng);
 
     // This code will take the city from local storage and print it on the
     // viewport.
-    if (load(LOCATIONS.CITY)) {
-      // debugger;
+    if (load(CONSTANTS.CITY)) {
       const searchBox = document.querySelector('#search-box');
-      searchBox.value = load(LOCATIONS.CITY);
+      searchBox.value = load(CONSTANTS.CITY);
     }
   }
   else {
