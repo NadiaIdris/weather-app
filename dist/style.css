@@ -143,6 +143,37 @@ i.search-icon {
   color: var(--black);
 }
 
+/* Overlay */
+
+#overlay {
+  position: fixed; /* Sit on top of the page content */
+  /*display: none; !* Hidden by default *!*/
+  display: flex;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+
+#overlay-pop-up {
+  width: 542px;
+  background-color: white;
+  height: 500px;
+  border-radius: 5px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#overlay-img {
+  border-radius: 5px;
+}
+
 /* First time landing page design */
 
 #empty-state {

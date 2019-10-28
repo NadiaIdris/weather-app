@@ -2,7 +2,6 @@ import {load, CONSTANTS, save} from "./storage";
 import {renderWeatherData} from "./renderers";
 
 const askLocation = () => {
-
   const success = (position) => {
     const lng = position.coords.longitude;
     const lat = position.coords.latitude;
@@ -17,14 +16,11 @@ const askLocation = () => {
         searchBox.value = load(CONSTANTS.CITY);
       }
     });
-
-    // Save in local storage that access has been granted.
     save(CONSTANTS.ACCESS, CONSTANTS.GRANTED);
   };
 
   const error = (error) => {
     if (error.code === error.PERMISSION_DENIED) {
-      console.log("You denied me access :(!");
       save(CONSTANTS.ACCESS, CONSTANTS.DENIED);
     }
   };
@@ -36,6 +32,14 @@ const askLocation = () => {
     // TODO: If current location denied, show a pop up describing how to grant
     //  access & why.
     window.alert("TODO: show pop up describing how to grant access & why");
+  }
+};
+
+const giveAccess = () => {
+  if (load(CONSTANTS.ACCESS) === CONSTANTS.DENIED) {
+    alert("Here will be a popup describing how to give access");
+
+
   }
 };
 
@@ -84,4 +88,4 @@ const getWeatherDataNow = (lat, lng) => {
       });
 };
 
-export {askLocation, getWeatherDataNow};
+export {askLocation, getWeatherDataNow, giveAccess};

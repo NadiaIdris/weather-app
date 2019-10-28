@@ -1,4 +1,4 @@
-import {askLocation, getWeatherDataNow} from "./data";
+import {askLocation, getWeatherDataNow, giveAccess} from "./data";
 import {hidePopUp, paintLandingPage, showPopUp,} from "./paint_ui";
 import {CONSTANTS, save} from "./storage";
 
@@ -7,6 +7,7 @@ const attachListeners = () => {
   myLocationIcon.addEventListener('mouseover', showPopUp);
   myLocationIcon.addEventListener('mouseout', hidePopUp);
   myLocationIcon.addEventListener('click', askLocation);
+  myLocationIcon.addEventListener('click', giveAccess);
 };
 
 const initializePlacesApi = () => {
