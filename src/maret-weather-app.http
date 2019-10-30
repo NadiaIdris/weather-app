@@ -1,0 +1,24 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection) or
+# paste cURL into the file and request will be converted to HTTP Request format.
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+# curl -i https://maret-weather-app.herokuapp.com/6eae3396dc3311cb103d2f86f03d5775/37.3914086,-122.00416789999998?exclude=minutely -H 'Target-Endpoint: https://api.darksky.net/forecast'
+
+GET https://maret-weather-app.herokuapp.com/forecast/6eae3396dc3311cb103d2f86f03d5775/37.3914086,-122.00416789999998?exclude=minutely
+
+###
+
+GET https://api.darksky.net/forecast/6eae3396dc3311cb103d2f86f03d5775/37.3914086,-122.00416789999998?exclude=minutely
+
+###
+
+GET https://maret-weather-app.herokuapp.com/
+
+###
+
+GET https://maret-weather-app.herokuapp.com/forecast/6eae3396dc3311cb103d2f86f03d5775/37.3914086,-122.00416789999998?exclude=minutely
+
+###

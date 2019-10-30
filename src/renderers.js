@@ -284,7 +284,6 @@ const renderAllHoursPerDay = weatherData => {
 
   const hoursInADay = 23;
   const currentHour = hour === 1 ? getCurrentHour(currentConditionsData.time, weatherData.offset) : 0;
-  debugger;
   const hoursLeftInADay = hoursInADay - currentHour;
   for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
     content += renderHour(hourlyDataArray[hour], weatherData.offset);

@@ -1,4 +1,4 @@
-import {load, CONSTANTS, save} from "./storage";
+import {CONSTANTS, load, save} from "./storage";
 import {renderWeatherData} from "./renderers";
 
 
@@ -61,11 +61,12 @@ const getWeatherDataNow = (lat, lng) => {
   save(CONSTANTS.LAT, lat);
   save(CONSTANTS.LNG, lng);
 
-  const API_KEY     = '6eae3396dc3311cb103d2f86f03d5775';
-  const url         = `https://api.darksky.net/forecast/${API_KEY}/${lat},${lng}?exclude=minutely`;
-  const corsFreeUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+  const API_KEY = '6eae3396dc3311cb103d2f86f03d5775';
+  const urlParams = `${API_KEY}/${lat},${lng}?exclude=minutely`;
+  const proxyServerUrl = `https://maret-weather-app.herokuapp.com/forecast/${urlParams}`;
 
-  fetch(corsFreeUrl)
+  debugger;
+  fetch(proxyServerUrl)
       .then((response) => {
         return response.json();
       })
