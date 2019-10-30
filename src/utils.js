@@ -40,10 +40,11 @@ const getCurrentHour = (unixTime, offset) => {
   const utcHours = date.getUTCHours();
   let hours = utcHours + offset;
   if (hours < 0) {
-    hours = 24 + hours;
-  } else if (hours >= 24) {
-    hours = hours - 24;
+    hours = 23 + hours;
+  } else if (hours >= 23) {
+    hours = hours - 23;
   }
+  if (hours === 24) window.alert("24 hours hit!");
   return hours;
 };
 

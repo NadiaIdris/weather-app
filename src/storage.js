@@ -12,7 +12,6 @@ const CONSTANTS = {
   CITY        : "CITY",
   ACCESS      : "ACCESS",
   GRANTED     : "GRANTED",
-  DENIED      : "DENIED",
 };
 
 /**

@@ -3,20 +3,6 @@ import {getWeatherDataNow} from "./data";
 import {renderWeatherData} from "./renderers";
 
 
-const showPopUp = () => {
-  if (!load(CONSTANTS.ACCESS)) {
-    const popUp         = document.querySelector('#pop-up');
-    popUp.style.opacity = '1';
-  }
-};
-
-const hidePopUp = () => {
-  const popUp         = document.querySelector('#pop-up');
-  if (popUp) {
-    popUp.style.opacity = '0';
-  }
-};
-
 function paintEmptyState() {
   deleteElementBySelector('#empty-state');
 
@@ -26,18 +12,7 @@ function paintEmptyState() {
   body.prepend(emptyStateContainer);
 
   emptyStateContainer.innerHTML = `
-      <h1>Welcome</h1>
-      <h2>Search a location below and the <br>weather will appear here.</h2>
-      <div id="pop-up">
-        <h3>Get weather for current location</h3>
-        <p class="space">After clicking
-          <i class="material-icons location-icon-text">my_location</i>, the
-        browser will ask for your permission to know your location. Click
-        “Allow” to be able to get
-        weather for current location.</p>
-        <img src="images/allow_access.svg" alt="Allow browser access location">
-        <div id="pop-up-arrow"></div>
-      </div>
+      <h1>Search a location below and the <br>weather will appear here.</h1>
     `;
 }
 
@@ -91,8 +66,6 @@ const addClickEventListeners = () => {
 
 
 export {
-  showPopUp,
-  hidePopUp,
   paintLandingPage,
   deleteElementBySelector,
   addClickEventListeners,

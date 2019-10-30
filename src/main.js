@@ -1,15 +1,10 @@
-import {askLocation, getWeatherDataNow, giveAccess, closeOverlay} from "./data";
-import {hidePopUp, paintLandingPage, showPopUp,} from "./paint_ui";
+import {askLocation, getWeatherDataNow} from "./data";
+import {paintLandingPage} from "./paint_ui";
 import {CONSTANTS, save} from "./storage";
 
 const attachListeners = () => {
   const myLocationIcon = document.querySelector('#my-location');
-  myLocationIcon.addEventListener('mouseover', showPopUp);
-  myLocationIcon.addEventListener('mouseout', hidePopUp);
   myLocationIcon.addEventListener('click', askLocation);
-  myLocationIcon.addEventListener('click', giveAccess);
-  const overlay = document.querySelector('#overlay');
-  overlay.addEventListener('click', closeOverlay);
 };
 
 const initializePlacesApi = () => {

@@ -42,17 +42,16 @@ body {
 /* Typography */
 
 h1 {
-  font-size: 72px;
-  font-weight: 400;
-  padding-bottom: 25px;
-  color: var(--dark-gray);
-}
-
-h2 {
   font-size: 20px;
   font-weight: 400;
   color: var(--dark-gray);
 }
+
+/*h2 {*/
+/*  font-size: 20px;*/
+/*  font-weight: 400;*/
+/*  color: var(--dark-gray);*/
+/*}*/
 
 h3 {
   font-size: 18px;
@@ -228,39 +227,6 @@ i.search-icon {
   vertical-align: text-bottom;
   padding-bottom: 2px;
 }
-
-
-#pop-up {
-  width: 335px;
-  height: 304px;
-  background-color: var(--white);
-  position: absolute;
-  bottom: 70px;
-  left: 61px;
-  border-radius: 5px;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-#pop-up img {
-  width: 308px;
-}
-
-#pop-up-arrow {
-  width: 15px;
-  height: 15px;
-  transform: rotate(45deg);
-  background-color: var(--white);
-  position: absolute;
-  bottom: -7px;
-  left: 19px;
-}
-
-.space {
-  margin: 9px 0 20px 0;
-  padding: 0 20px;
-}
-
 
 /*    */
 

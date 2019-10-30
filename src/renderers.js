@@ -62,7 +62,6 @@ Sample of weatherData.daily.data:
  */
 // Globals
 let hour;
-let totalHoursLeft;
 
 function resetGlobals() {
   hour = 0;
@@ -199,10 +198,7 @@ const renderWeatherData = (weatherData, unit) => {
     }
   }
 
-
-  // const selectedTempInC = document.querySelectorAll('.selected-temp');
   const notSelectedTemp = document.querySelectorAll('.not-selected-temp');
-  // selectedTempInC.forEach(elem => elem.addEventListener('click', unselectTemp));
   notSelectedTemp.forEach(elem => elem.addEventListener('click', selectTemp));
 
   resetGlobals();
@@ -239,8 +235,6 @@ const renderDay = (weatherData, index, unit) => {
 };
 
 
-// Pass either weatherData.currently or
-// pass weatherData.daily.data
 const renderDayOverview = (data, unit, offset) => {
   let date = formatDate(data.time, offset);
   const weatherData = load(CONSTANTS.WEATHER_DATA);
@@ -274,27 +268,28 @@ const renderDayOverview = (data, unit, offset) => {
 
 // Render all hours for ONE day.
 const renderAllHoursPerDay = weatherData => {
-  const hourArray = weatherData.hourly.data;
-  const currentWeather = weatherData.currently;
+  const hourlyDataArray = weatherData.hourly.data;
+  const currentConditionsData = weatherData.currently;
   let content = "";
 
-  totalHoursLeft = hourArray.length;
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 0) {
-    content += renderHour(currentWeather, weatherData.offset);
+    content += renderHour(currentConditionsData, weatherData.offset);
     hour++;
+
+    if (getCurrentHour(currentConditionsData.time, weatherData.offset) === 0){
+      return content === '' ? '' : `<div class="all-hours-container">${content}</div>`;
+    }
   }
 
-  // Increment the current weather hour by 1, because we have already
-  // printed the current weather hour on the viewport.
-  const currentHour = hour === 1 ? (getCurrentHour(currentWeather.time, weatherData.offset) + 1) : 0;
-  const hoursInADay = 24;
+  const hoursInADay = 23;
+  const currentHour = hour === 1 ? getCurrentHour(currentConditionsData.time, weatherData.offset) : 0;
+  debugger;
   const hoursLeftInADay = hoursInADay - currentHour;
-  for (let i = 0; i < hoursLeftInADay && hour < hourArray.length; i++) {
-    content += renderHour(hourArray[hour], weatherData.offset);
+  for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+    content += renderHour(hourlyDataArray[hour], weatherData.offset);
     hour++;
   }
-  totalHoursLeft -= hoursLeftInADay;
 
   return content === '' ? '' : `<div class="all-hours-container">${content}</div>`;
 };

@@ -1,6 +1,7 @@
 import {load, CONSTANTS, save} from "./storage";
 import {renderWeatherData} from "./renderers";
 
+
 const askLocation = () => {
   const success = (position) => {
     const lng = position.coords.longitude;
@@ -21,7 +22,6 @@ const askLocation = () => {
 
   const error = (error) => {
     if (error.code === error.PERMISSION_DENIED) {
-      save(CONSTANTS.ACCESS, CONSTANTS.DENIED);
     }
   };
 
@@ -32,20 +32,6 @@ const askLocation = () => {
     // TODO: If current location denied, show a pop up describing how to grant
     //  access & why.
     window.alert("TODO: show pop up describing how to grant access & why");
-  }
-};
-
-const giveAccess = () => {
-  if (load(CONSTANTS.ACCESS) === CONSTANTS.DENIED) {
-    const overlay = document.querySelector('#overlay');
-    overlay.style.display = 'flex';
-  }
-};
-
-const closeOverlay = () => {
-  const overlay = document.querySelector('#overlay');
-  if (overlay.style.display === 'flex') {
-    overlay.style.display = 'none';
   }
 };
 
@@ -94,4 +80,4 @@ const getWeatherDataNow = (lat, lng) => {
       });
 };
 
-export {askLocation, getWeatherDataNow, giveAccess, closeOverlay};
+export {askLocation, getWeatherDataNow};
