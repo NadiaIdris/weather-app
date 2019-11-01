@@ -17,32 +17,73 @@ const calcTime = unixTime => {
 
 const calcHour = (unixTime, offset) => {
   const date = new Date(unixTime * 1000);
-  let hoursLeft = date.getUTCHours() + offset;  //1-7=-6  should be 18
+  let UTCHours = date.getUTCHours();
+  let UTCMinutes = date.getUTCMinutes();
+  let offsetMinutes;
+  let hours;
 
-  if (hoursLeft < 0) {
-    hoursLeft = 24 + hoursLeft;
+  // If number is not an integer, get the floating nums, convert them to
+  // mins and add then to the UTCMinutes. Then add minutes to UTC hours and
+  // offset hours and that is the correct hour to show weather for.
+  if (!Number.isInteger(offset)) {
+    if (offset % 1 === 0.5) { offsetMinutes = 30; }
+    else if (offset % 1 === 0.75) { offsetMinutes = 45; }
+    else if (offset % 1 === 0.25) { offsetMinutes = 15; }
+
+    UTCMinutes += offsetMinutes;
+
+    if (UTCMinutes >= 60) { UTCHours++; }
+
+    const offsetInt = parseInt(offset);
+    hours = UTCHours + offsetInt;
+  } else {
+    hours = UTCHours + offset;
+  }
+
+  if (hours < 0) {
+    hours = 24 + hours;
   }
 
   // If hours is more than 12, then it's PM, else it's AM.
-  if (hoursLeft >= 24) {
-    return `${hoursLeft - 24} AM`;
-  } else if(hoursLeft > 12) {
-    return `${hoursLeft - 12} PM`;
-  } else if (hoursLeft === 12) {
-    return `${hoursLeft} PM`;
+  if (hours >= 24) {
+    return `${hours - 24} AM`;
+  } else if(hours > 12) {
+    return `${hours - 12} PM`;
+  } else if (hours === 12) {
+    return `${hours} PM`;
   } else {
-    return `${hoursLeft} AM`;
+    return `${hours} AM`;
   }
 };
 
 const getCurrentHour = (unixTime, offset) => {
   const date = new Date(unixTime * 1000);
-  const utcHours = date.getUTCHours();
-  let hours = utcHours + offset;
+  let UTCHours = date.getUTCHours();
+  let UTCMinutes = date.getUTCMinutes();
+  let offsetMinutes;
+  let hours;
+
+  if (!Number.isInteger(offset)) {
+    if (offset % 1 === 0.5) { offsetMinutes = 30; }
+    else if (offset % 1 === 0.75) { offsetMinutes = 45; }
+    else if (offset % 1 === 0.25) { offsetMinutes = 15; }
+
+    UTCMinutes += offsetMinutes;
+
+    if (UTCMinutes >= 60) { UTCHours++; }
+
+    const offsetInt = parseInt(offset);
+    hours = UTCHours + offsetInt;
+  } else {
+    hours = UTCHours + offset;
+  }
+
   if (hours < 0) {
-    hours = 23 + hours;
-  } else if (hours >= 23) {
-    hours = hours - 23;
+    hours = 24 + hours;
+  } else if (hours === 23) {
+    hours = 23;
+  } else if (hours > 23) {
+    hours = hours - 24;
   }
   if (hours === 24) window.alert("24 hours hit!");
   return hours;
@@ -61,7 +102,6 @@ const formatDate = (unixTime, offset) => {
   let monthIndex = date.getUTCMonth(); // returns 0 - 11.
   const year = date.getUTCFullYear();
 
-  // daysInMonth((monthIndex + 1), year);
 
   // Check if hours > 24, then increment day by 1. If hours < 0, then
   // decrement day by 1.

@@ -62,6 +62,7 @@ Sample of weatherData.daily.data:
  */
 // Globals
 let hour;
+let isHour0Now = false;
 
 function resetGlobals() {
   hour = 0;
@@ -172,6 +173,7 @@ const getUvIndexDescription = (uvIndex) => {
 
 
 const renderWeatherData = (weatherData, unit) => {
+  isHour0Now = false;
   resetGlobals();
   const weatherDailyArray = weatherData.daily.data;
 
@@ -272,22 +274,59 @@ const renderAllHoursPerDay = weatherData => {
   const currentConditionsData = weatherData.currently;
   let content = "";
 
+  // debugger;
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 0) {
     content += renderHour(currentConditionsData, weatherData.offset);
     hour++;
 
-    if (getCurrentHour(currentConditionsData.time, weatherData.offset) === 0){
+    const currentHourTemp = getCurrentHour(currentConditionsData.time, weatherData.offset);
+    if (currentHourTemp === 23){
       return content === '' ? '' : `<div class="all-hours-container">${content}</div>`;
     }
   }
 
   const hoursInADay = 23;
-  const currentHour = hour === 1 ? getCurrentHour(currentConditionsData.time, weatherData.offset) : 0;
+  const getCurrentHourReturns = getCurrentHour(currentConditionsData.time, weatherData.offset);
+  let currentHour;
+
+  if (hour === 1 && getCurrentHourReturns === 0) {
+    currentHour = 0;
+  } else if (hour === 1 && getCurrentHourReturns === 23) {
+    currentHour = 0;
+  } else if (hour === 1) {
+    currentHour = getCurrentHour(currentConditionsData.time, weatherData.offset) + 1;
+  } else {
+    currentHour = 0;
+  }
+
   const hoursLeftInADay = hoursInADay - currentHour;
-  for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
-    content += renderHour(hourlyDataArray[hour], weatherData.offset);
-    hour++;
+
+  // If it's UTC time, then run 23 times
+  if (hour === 1 && weatherData.offset === 0){
+    for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+      content += renderHour(hourlyDataArray[hour], weatherData.offset);
+      hour++;
+    }
+  }
+  // If now is 0AM, run 22 times
+  else if (currentHour === 0 && hour === 1 && isHour0Now) {
+    for (let hourIndex = 0; hourIndex < hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+      content += renderHour(hourlyDataArray[hour], weatherData.offset);
+      hour++;
+    }
+  }
+  // If it's new day, run 23 times
+  else if (currentHour === 0) {
+    for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+      content += renderHour(hourlyDataArray[hour], weatherData.offset);
+      hour++;
+    }
+  } else {
+    for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+      content += renderHour(hourlyDataArray[hour], weatherData.offset);
+      hour++;
+    }
   }
 
   return content === '' ? '' : `<div class="all-hours-container">${content}</div>`;
@@ -330,7 +369,17 @@ function renderHour(hourData, offset) {
   const dewPoint = Math.round(hourData.dewPoint);
   const precipitation = Math.round(hourData.precipProbability *100);
 
-  let hourToPrint = hour === 0 || hour === 0 && hourEvaluated === '0 AM' ? "Now" : hourEvaluated;
+  // let hourToPrint = hour === 0 || hour === 0 && hourEvaluated === '0 AM' ? "Now" : hourEvaluated;
+  let hourToPrint;
+  if (hour === 0 && hourEvaluated === '0 AM') {
+    hourToPrint = "Now";
+    isHour0Now = true;
+  } else if (hour === 0) {
+    hourToPrint = "Now";
+  } else {
+    hourToPrint = hourEvaluated;
+  }
+
   if (hourEvaluated === '0 AM' && hour !== 0) { hourToPrint = 'Midnight'; }
   if (hourEvaluated === '12 PM' && hour !== 0) { hourToPrint = 'Noon'; }
 
@@ -370,7 +419,6 @@ function renderHour(hourData, offset) {
           </div>
         </div>
       </div>
-
 `;
   return content;
 }
