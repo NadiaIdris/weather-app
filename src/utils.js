@@ -1,3 +1,6 @@
+import {CONSTANTS, load, save} from "./storage";
+import {paintLandingPage} from "./paint_ui";
+
 const f2c = f => Math.round((f - 32) * 5 / 9);
 
 // Convert Unix timestamp to date in js:
@@ -107,9 +110,99 @@ const formatDate = (unixTime, offset) => {
   return `${day}, ${month} ${dayOfMonth}`;
 };
 
+function selectTemp() {
+  const allSelectedContainers = document.querySelectorAll('.selected-temp');
+  const allNotSelectedContainers = document.querySelectorAll('.not-selected-temp');
+
+  allNotSelectedContainers.forEach(elem => {
+    elem.classList.toggle('not-selected-temp');
+    elem.classList.toggle('selected-temp');
+  });
+
+  allSelectedContainers.forEach(elem => {
+    elem.classList.toggle('selected-temp');
+    elem.classList.toggle('not-selected-temp');
+  });
+
+  if (load(CONSTANTS.TEMP) === CONSTANTS.F) {
+    // Change TEMP in localStorage to C
+    save(CONSTANTS.TEMP, CONSTANTS.C);
+  } else {
+    save(CONSTANTS.TEMP, CONSTANTS.F);
+  }
+
+  paintLandingPage();
+}
+
+function selectBackgroundColor(temperatureC) {
+  let backgroundColor;
+  if (temperatureC < -25) { backgroundColor = "#008FE0"; }
+  else if (temperatureC >= -25 && temperatureC < -20) { backgroundColor = "#009AF1"; }
+  else if (temperatureC >= -20 && temperatureC < -15) { backgroundColor = "#00A3FF"; }
+  else if (temperatureC >= -15 && temperatureC < -10) { backgroundColor = "#00AAF4"; }
+  else if (temperatureC >= -10 && temperatureC < -5) { backgroundColor = "#00B7F1"; }
+  else if (temperatureC >= -5 && temperatureC < 0) { backgroundColor = "#00C9F6"; }
+  else if (temperatureC >= 0 && temperatureC < 5) { backgroundColor = "#00D6E3"; }
+  else if (temperatureC >= 5 && temperatureC < 10) { backgroundColor = "#EFD702"; }
+  else if (temperatureC >= 10 && temperatureC < 15) { backgroundColor = "#FFC700"; }
+  else if (temperatureC >= 15 && temperatureC < 20) { backgroundColor = "#FFB800"; }
+  else if (temperatureC >= 20 && temperatureC < 25) { backgroundColor = "#FFA800"; }
+  else if (temperatureC >= 25 && temperatureC < 30) { backgroundColor = "#FF8A00"; }
+  else if (temperatureC >= 30 && temperatureC < 35) { backgroundColor = "#FF6B00"; }
+  else if (temperatureC >= 35 && temperatureC < 40) { backgroundColor = "#ED5500"; }
+  else if (temperatureC >= 40 && temperatureC < 45) { backgroundColor = "#E54500"; }
+  else if (temperatureC >= 45) { backgroundColor = "#D84100"; }
+  return backgroundColor;
+}
+
+const windSpeedDescription = (windSpeedInKmPerHour) => {
+  let windDescription;
+  if (windSpeedInKmPerHour <=11) { windDescription = "Light"; }
+  else if (windSpeedInKmPerHour > 11 && windSpeedInKmPerHour <= 38) { windDescription = "Moderate"; }
+  else if (windSpeedInKmPerHour > 38 && windSpeedInKmPerHour <= 61) { windDescription = "Strong"; }
+  else if (windSpeedInKmPerHour > 61 && windSpeedInKmPerHour <= 88) { windDescription = "Very strong"; }
+  else if (windSpeedInKmPerHour > 88 && windSpeedInKmPerHour <= 117) { windDescription = "Extremely strong"; }
+  else if (windSpeedInKmPerHour > 117) { windDescription = "Hurricane"; }
+  return windDescription;
+};
+
+const calculateKm = (miles) => {
+  return Math.round(miles * 1.60934);
+};
+
+const miles2km = (miles) => {
+  const km = calculateKm(miles);
+  const speedDescription = windSpeedDescription(km);
+  // return `${speedDescription}, ${km} km/hr`;
+  return `${speedDescription}`;
+};
+
+const milesPerHour = (miles) => {
+  const m = Math.round(miles);
+  const km = calculateKm(m);
+  const speedDescription = windSpeedDescription(km);
+  // return `${speedDescription}, ${m} mph`;
+  return `${speedDescription}`;
+};
+
+const getUvIndexDescription = (uvIndex) => {
+  let description;
+  if (uvIndex >= 0 && uvIndex < 3) { description = "Low"; }
+  else if (uvIndex >= 3 && uvIndex < 6) { description = "Medium"; }
+  else if (uvIndex >= 6 && uvIndex < 8) { description = "High"; }
+  else if (uvIndex >= 8 && uvIndex < 11) { description = "Very high"; }
+  else if (uvIndex >= 11) { description = "Extreme"; }
+  return description;
+};
+
 export {
   f2c,
   calcHour,
   getCurrentHour,
-  formatDate
+  formatDate,
+  selectTemp,
+  selectBackgroundColor,
+  miles2km,
+  milesPerHour,
+  getUvIndexDescription,
 }
