@@ -1,21 +1,9 @@
 const f2c = f => Math.round((f - 32) * 5 / 9);
+
+// Convert Unix timestamp to date in js:
 // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
-const calcTime = unixTime => {
-  const date = new Date(unixTime * 1000);
-  const hours = date.getHours();
-  const minutes = "0" + date.getMinutes();
 
-  // If hours is more than 12, then it's PM, else it's AM.
-  if (hours > 12) {
-    return `${hours - 12}:${minutes.substring(minutes.length - 2)} PM`;
-  } else if (hours === 12) {
-    return `${hours}:${minutes.substring(minutes.length - 2)} PM`;
-  } else {
-    return `${hours}:${minutes.substring(minutes.length - 2)} AM`;
-  }
-};
-
-const calcHour = (unixTime, offset) => {
+function calcHours(unixTime, offset) {
   const date = new Date(unixTime * 1000);
   let UTCHours = date.getUTCHours();
   let UTCMinutes = date.getUTCMinutes();
@@ -26,19 +14,30 @@ const calcHour = (unixTime, offset) => {
   // mins and add then to the UTCMinutes. Then add minutes to UTC hours and
   // offset hours and that is the correct hour to show weather for.
   if (!Number.isInteger(offset)) {
-    if (offset % 1 === 0.5) { offsetMinutes = 30; }
-    else if (offset % 1 === 0.75) { offsetMinutes = 45; }
-    else if (offset % 1 === 0.25) { offsetMinutes = 15; }
+    if (offset % 1 === 0.5) {
+      offsetMinutes = 30;
+    } else if (offset % 1 === 0.75) {
+      offsetMinutes = 45;
+    } else if (offset % 1 === 0.25) {
+      offsetMinutes = 15;
+    }
 
     UTCMinutes += offsetMinutes;
 
-    if (UTCMinutes >= 60) { UTCHours++; }
+    if (UTCMinutes >= 60) {
+      UTCHours++;
+    }
 
     const offsetInt = parseInt(offset);
     hours = UTCHours + offsetInt;
   } else {
     hours = UTCHours + offset;
   }
+  return hours;
+}
+
+const calcHour = (unixTime, offset) => {
+  let hours = calcHours(unixTime, offset);
 
   if (hours < 0) {
     hours = 24 + hours;
@@ -57,26 +56,7 @@ const calcHour = (unixTime, offset) => {
 };
 
 const getCurrentHour = (unixTime, offset) => {
-  const date = new Date(unixTime * 1000);
-  let UTCHours = date.getUTCHours();
-  let UTCMinutes = date.getUTCMinutes();
-  let offsetMinutes;
-  let hours;
-
-  if (!Number.isInteger(offset)) {
-    if (offset % 1 === 0.5) { offsetMinutes = 30; }
-    else if (offset % 1 === 0.75) { offsetMinutes = 45; }
-    else if (offset % 1 === 0.25) { offsetMinutes = 15; }
-
-    UTCMinutes += offsetMinutes;
-
-    if (UTCMinutes >= 60) { UTCHours++; }
-
-    const offsetInt = parseInt(offset);
-    hours = UTCHours + offsetInt;
-  } else {
-    hours = UTCHours + offset;
-  }
+  let hours = calcHours(unixTime, offset);
 
   if (hours < 0) {
     hours = 24 + hours;
@@ -91,21 +71,20 @@ const getCurrentHour = (unixTime, offset) => {
 
 
 const formatDate = (unixTime, offset) => {
+  // debugger;
   const daysInMonth = (month, year) => {
     return new Date(year, month, 0).getDate();
   };
 
   const date = new Date(unixTime * 1000);
-  const hoursUTC = date.getUTCHours();
   let dayIndex = date.getUTCDay();  // returns 0 - 6. Sunday - Saturday : 0 - 6.
   let dayOfMonth = date.getUTCDate();  // returns 1 - 31.
   let monthIndex = date.getUTCMonth(); // returns 0 - 11.
   const year = date.getUTCFullYear();
 
-
   // Check if hours > 24, then increment day by 1. If hours < 0, then
   // decrement day by 1.
-  let hours = hoursUTC + offset;
+  let hours = calcHours(unixTime, offset);
   if (hours < 0) {
     dayIndex = dayIndex - 1;
     dayOfMonth = dayOfMonth - 1;
@@ -130,7 +109,6 @@ const formatDate = (unixTime, offset) => {
 
 export {
   f2c,
-  calcTime,
   calcHour,
   getCurrentHour,
   formatDate

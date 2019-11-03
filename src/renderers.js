@@ -66,6 +66,7 @@ let isHour0Now = false;
 
 function resetGlobals() {
   hour = 0;
+  isHour0Now = false;
 }
 
 // TODO: Move these functions to utils.js later -------------------------
@@ -173,7 +174,6 @@ const getUvIndexDescription = (uvIndex) => {
 
 
 const renderWeatherData = (weatherData, unit) => {
-  isHour0Now = false;
   resetGlobals();
   const weatherDailyArray = weatherData.daily.data;
 
