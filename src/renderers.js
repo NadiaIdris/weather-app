@@ -2,67 +2,10 @@ import {calcHour, f2c, formatDate, getCurrentHour, selectBackgroundColor, miles2
 import {addClickEventListeners, deleteElementBySelector} from "./paint_ui";
 import {load, CONSTANTS} from "./storage";
 
-/*
-Overview of WEATHER_DATA:
-
-currently: {time: 1569812750, summary: "Partly Cloudy", icon: "partly-cloudy-night", nearestStormDistance: 13, nearestStormBearing: 62, …}
-daily: {summary: "No precipitation throughout the week, with high temperatures rising to 84°F on Saturday.", icon: "clear-day", data: Array(8)}
-flags: {sources: Array(11), nearest-station: 2.613, units: "us"}
-hourly: {summary: "Clear throughout the day.", icon: "clear-day", data: Array(49)}
-latitude: 37.3914086
-longitude: -122.00416789999998
-offset: -7
-timezone: "America/Los_Angeles"
- */
-
-/*
-Sample of weatherData.daily.data:
-      {
-        "time": 1569826800,
-        "summary": "Partly cloudy throughout the day.",
-        "icon": "partly-cloudy-day",
-        "sunriseTime": 1569852232,
-        "sunsetTime": 1569894868,
-        "moonPhase": 0.09,
-        "precipIntensity": 0.0002,
-        "precipIntensityMax": 0.0018,
-        "precipIntensityMaxTime": 1569898800,
-        "precipProbability": 0.16,
-        "precipType": "rain",
-        "temperatureHigh": 66.06,
-        "temperatureHighTime": 1569884400,
-        "temperatureLow": 44.62,
-        "temperatureLowTime": 1569938400,
-        "apparentTemperatureHigh": 65.39,
-        "apparentTemperatureHighTime": 1569884400,
-        "apparentTemperatureLow": 45.27,
-        "apparentTemperatureLowTime": 1569938400,
-        "dewPoint": 40.87,
-        "humidity": 0.56,
-        "pressure": 1015.35,
-        "windSpeed": 4.55,
-        "windGust": 16.86,
-        "windGustTime": 1569888000,
-        "windBearing": 273,
-        "cloudCover": 0.35,
-        "uvIndex": 5,
-        "uvIndexTime": 1569873600,
-        "visibility": 9.864,
-        "ozone": 323.8,
-        "temperatureMin": 50.98,
-        "temperatureMinTime": 1569913200,
-        "temperatureMax": 66.06,
-        "temperatureMaxTime": 1569884400,
-        "apparentTemperatureMin": 51.63,
-        "apparentTemperatureMinTime": 1569913200,
-        "apparentTemperatureMax": 65.39,
-        "apparentTemperatureMaxTime": 1569884400
-      }
-
- */
 // Globals
 let hour;
 let isHour0Now = false;
+let backgroundColor;
 
 function resetGlobals() {
   hour = 0;
@@ -104,7 +47,7 @@ const renderWeatherData = (weatherData, unit) => {
 
 const renderDay = (weatherData, index, unit) => {
   let content = '';
-  let backgroundColor;
+  // var backgroundColor;
   let temperatureC;
 
   function paintDayOverview() {
@@ -112,13 +55,14 @@ const renderDay = (weatherData, index, unit) => {
     // else pass weatherData.daily.data[1]
     if (hour === 0) {
       content += renderDayOverview(weatherData.currently, unit, weatherData.offset);
-      // Paint the background color
+      // Paint the day background color
       const temperatureF = Math.round(weatherData.currently.apparentTemperature);
       temperatureC = f2c(temperatureF);
       backgroundColor = selectBackgroundColor(temperatureC);
     } else {
       content += renderDayOverview(weatherData.daily.data[index], unit, weatherData.offset);
       // Paint the background color
+
       const temperatureF = Math.round(weatherData.daily.data[index].temperatureHigh);
       temperatureC = f2c(temperatureF);
       backgroundColor = selectBackgroundColor(temperatureC);
@@ -250,7 +194,7 @@ function renderHour(hourData, offset) {
   if (hourEvaluated === '0 AM' && hour !== 0) { hourToPrint = 'Midnight'; }
   if (hourEvaluated === '12 PM' && hour !== 0) { hourToPrint = 'Noon'; }
 
-  const backgroundColor = selectBackgroundColor(temperatureC);
+  backgroundColor = selectBackgroundColor(temperatureC);
   const selectedTempHourlyF = load(CONSTANTS.TEMP) === CONSTANTS.F ? "selected-temp-hourly" : "not-selected-temp-hourly";
   const selectedTempHourlyC = load(CONSTANTS.TEMP) === CONSTANTS.C ? "selected-temp-hourly" : "not-selected-temp-hourly";
 
