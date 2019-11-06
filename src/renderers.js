@@ -259,7 +259,7 @@ function renderHour(hourData, offset) {
       <div class="hour-container" style="background-color: ${backgroundColor}">
         <div class="hour-summary">
           <p class="left-col">${hourToPrint}</p>
-          <img class="small-icon" src="images/${icon}.svg">
+          <img class="small-icon" src="images/${icon}.svg" height="22">
           <div class="temperature-container-small right-col">
              <p class="${selectedTempHourlyF}">${temperatureF}<span>&#176;</span></p>
              <p class="divider">/</p>

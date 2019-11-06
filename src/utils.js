@@ -134,22 +134,22 @@ function selectTemp() {
 
 function selectBackgroundColor(temperatureC) {
   let backgroundColor;
-  if (temperatureC < -25) { backgroundColor = "#008FE0"; }
-  else if (temperatureC >= -25 && temperatureC < -20) { backgroundColor = "#009AF1"; }
-  else if (temperatureC >= -20 && temperatureC < -15) { backgroundColor = "#00A3FF"; }
-  else if (temperatureC >= -15 && temperatureC < -10) { backgroundColor = "#00AAF4"; }
-  else if (temperatureC >= -10 && temperatureC < -5) { backgroundColor = "#00B7F1"; }
-  else if (temperatureC >= -5 && temperatureC < 0) { backgroundColor = "#00C9F6"; }
-  else if (temperatureC >= 0 && temperatureC < 5) { backgroundColor = "#00D6E3"; }
-  else if (temperatureC >= 5 && temperatureC < 10) { backgroundColor = "#EFD702"; }
-  else if (temperatureC >= 10 && temperatureC < 15) { backgroundColor = "#FFC700"; }
-  else if (temperatureC >= 15 && temperatureC < 20) { backgroundColor = "#FFB800"; }
-  else if (temperatureC >= 20 && temperatureC < 25) { backgroundColor = "#FFA800"; }
-  else if (temperatureC >= 25 && temperatureC < 30) { backgroundColor = "#FF8A00"; }
-  else if (temperatureC >= 30 && temperatureC < 35) { backgroundColor = "#FF6B00"; }
-  else if (temperatureC >= 35 && temperatureC < 40) { backgroundColor = "#ED5500"; }
-  else if (temperatureC >= 40 && temperatureC < 45) { backgroundColor = "#E54500"; }
-  else if (temperatureC >= 45) { backgroundColor = "#D84100"; }
+  if (temperatureC < -25) { backgroundColor = "#64ACD4"; }
+  else if (temperatureC >= -25 && temperatureC < -20) { backgroundColor = "#63B3E1"; }
+  else if (temperatureC >= -20 && temperatureC < -15) { backgroundColor = "#68BADE"; }
+  else if (temperatureC >= -15 && temperatureC < -10) { backgroundColor = "#78C6DF"; }
+  else if (temperatureC >= -10 && temperatureC < -5) { backgroundColor = "#8AD5E5"; }
+  else if (temperatureC >= -5 && temperatureC < 0) { backgroundColor = "#ADE3EA"; }
+  else if (temperatureC >= 0 && temperatureC < 5) { backgroundColor = "#F4E76D"; }
+  else if (temperatureC >= 5 && temperatureC < 10) { backgroundColor = "#F6D93F"; }
+  else if (temperatureC >= 10 && temperatureC < 15) { backgroundColor = "#F5CC36"; }
+  else if (temperatureC >= 15 && temperatureC < 20) { backgroundColor = "#F6BF31"; }
+  else if (temperatureC >= 20 && temperatureC < 25) { backgroundColor = "#F3B922"; }
+  else if (temperatureC >= 25 && temperatureC < 30) { backgroundColor = "#EFAA26"; }
+  else if (temperatureC >= 30 && temperatureC < 35) { backgroundColor = "#F2A207"; }
+  else if (temperatureC >= 35 && temperatureC < 40) { backgroundColor = "#F19100"; }
+  else if (temperatureC >= 40 && temperatureC < 45) { backgroundColor = "#EA7D18"; }
+  else if (temperatureC >= 45) { backgroundColor = "#E06E05"; }
   return backgroundColor;
 }
 
