@@ -1,4 +1,4 @@
-import {calcHour, f2c, formatDate, getCurrentHour, selectBackgroundColor, milesPerHour, miles2km, getUvIndexDescription, selectTemp} from "./utils";
+import {calcHour, f2c, formatDate, getCurrentHour, selectBackgroundColor, miles2km, getUvIndexDescription, selectTemp} from "./utils";
 import {addClickEventListeners, deleteElementBySelector} from "./paint_ui";
 import {load, CONSTANTS} from "./storage";
 
@@ -69,7 +69,6 @@ function resetGlobals() {
   isHour0Now = false;
 }
 
-
 const renderWeatherData = (weatherData, unit) => {
   resetGlobals();
   const weatherDailyArray = weatherData.daily.data;
@@ -127,9 +126,8 @@ const renderDay = (weatherData, index, unit) => {
   }
   paintDayOverview();
 
-  if (weatherData.hourly.data){
-    content += renderAllHoursPerDay(weatherData);
-  }
+  if (weatherData.hourly.data) { content += renderAllHoursPerDay(weatherData); }
+
   return `<div class="day-weather-container" style="background-color: ${backgroundColor}">${content}</div>`;
 };
 
@@ -171,7 +169,6 @@ const renderAllHoursPerDay = weatherData => {
   const currentConditionsData = weatherData.currently;
   let content = "";
 
-  // debugger;
   // If it's a day 1, generate first hour with current weather data.
   if (hour === 0) {
     content += renderHour(currentConditionsData, weatherData.offset);
@@ -234,15 +231,12 @@ function renderHour(hourData, offset) {
   const icon = hourData.icon;
   const temperatureF = Math.round(hourData.temperature);
   const temperatureC = f2c(temperatureF);
-  let wind;
-  const windInMiles = milesPerHour(hourData.windSpeed);
-  const windInKm = miles2km(hourData.windSpeed);
+  const wind = miles2km(hourData.windSpeed);
   const uvIndex = getUvIndexDescription(hourData.uvIndex);
   const humidity = Math.round(hourData.humidity * 100);
   const dewPoint = Math.round(hourData.dewPoint);
   const precipitation = Math.round(hourData.precipProbability *100);
 
-  // let hourToPrint = hour === 0 || hour === 0 && hourEvaluated === '0 AM' ? "Now" : hourEvaluated;
   let hourToPrint;
   if (hour === 0 && hourEvaluated === '0 AM') {
     hourToPrint = "Now";
@@ -257,7 +251,6 @@ function renderHour(hourData, offset) {
   if (hourEvaluated === '12 PM' && hour !== 0) { hourToPrint = 'Noon'; }
 
   const backgroundColor = selectBackgroundColor(temperatureC);
-  wind = load(CONSTANTS.TEMP) === CONSTANTS.F ? windInMiles : windInKm;
   const selectedTempHourlyF = load(CONSTANTS.TEMP) === CONSTANTS.F ? "selected-temp-hourly" : "not-selected-temp-hourly";
   const selectedTempHourlyC = load(CONSTANTS.TEMP) === CONSTANTS.C ? "selected-temp-hourly" : "not-selected-temp-hourly";
 

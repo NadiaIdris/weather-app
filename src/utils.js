@@ -74,7 +74,6 @@ const getCurrentHour = (unixTime, offset) => {
 
 
 const formatDate = (unixTime, offset) => {
-  // debugger;
   const daysInMonth = (month, year) => {
     return new Date(year, month, 0).getDate();
   };
@@ -125,7 +124,6 @@ function selectTemp() {
   });
 
   if (load(CONSTANTS.TEMP) === CONSTANTS.F) {
-    // Change TEMP in localStorage to C
     save(CONSTANTS.TEMP, CONSTANTS.C);
   } else {
     save(CONSTANTS.TEMP, CONSTANTS.F);
@@ -173,15 +171,6 @@ const calculateKm = (miles) => {
 const miles2km = (miles) => {
   const km = calculateKm(miles);
   const speedDescription = windSpeedDescription(km);
-  // return `${speedDescription}, ${km} km/hr`;
-  return `${speedDescription}`;
-};
-
-const milesPerHour = (miles) => {
-  const m = Math.round(miles);
-  const km = calculateKm(m);
-  const speedDescription = windSpeedDescription(km);
-  // return `${speedDescription}, ${m} mph`;
   return `${speedDescription}`;
 };
 
@@ -203,6 +192,5 @@ export {
   selectTemp,
   selectBackgroundColor,
   miles2km,
-  milesPerHour,
   getUvIndexDescription,
 }

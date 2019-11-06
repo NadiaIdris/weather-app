@@ -22,6 +22,12 @@ const askLocation = () => {
 
   const error = (error) => {
     if (error.code === error.PERMISSION_DENIED) {
+      window.alert(
+          `Unable to retrieve your location.
+          
+-- Click on the location icon on the right on the URL bar and clear settings for future visits. 
+
+-- Then refresh the web page and click on the location icon on the bottom left web page to give browser access to know your current location.`);
     }
   };
 
@@ -29,9 +35,7 @@ const askLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error);
   }
   else {
-    // TODO: If current location denied, show a pop up describing how to grant
-    //  access & why.
-    window.alert("TODO: show pop up describing how to grant access & why");
+    window.alert("Geolocation is not supported by your browser.");
   }
 };
 
@@ -57,7 +61,6 @@ const getWeatherDataNow = (lat, lng) => {
     return;
   }
 
-  // Save the lat, lng pair to LocalStorage for use later.
   save(CONSTANTS.LAT, lat);
   save(CONSTANTS.LNG, lng);
 

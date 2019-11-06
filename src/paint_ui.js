@@ -29,8 +29,6 @@ const paintLandingPage = () => {
     const lng = load(CONSTANTS.LNG);
     getWeatherDataNow(lat, lng);
 
-    // This code will take the city from local storage and print it on the
-    // viewport.
     if (load(CONSTANTS.CITY)) {
       const searchBox = document.querySelector('#search-box');
       searchBox.value = load(CONSTANTS.CITY);
