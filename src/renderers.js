@@ -18,6 +18,7 @@ const renderWeatherData = (weatherData, unit) => {
 
   // Reset the DOM.
   deleteElementBySelector('#empty-state');
+  deleteElementBySelector('#loader-wrapper');
   deleteElementBySelector('#all-weather-container');
 
   // Paint new interface.
@@ -79,8 +80,6 @@ const renderDay = (weatherData, index, unit) => {
 const renderDayOverview = (data, unit, offset) => {
   let date = formatDate(data.time, offset);
   const weatherData = load(CONSTANTS.WEATHER_DATA);
-  // TODO: pass weatherData to renderDayOverview? I am currently loading
-  //  data from localStorage and it's expensive to do it this way.
   if (data.time === weatherData.currently.time) date = 'Now';
 
   const icon = data.icon;

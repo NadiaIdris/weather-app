@@ -68,7 +68,13 @@ const getWeatherDataNow = (lat, lng) => {
   const urlParams = `${API_KEY}/${lat},${lng}?exclude=minutely`;
   const proxyServerUrl = `https://maret-weather-app.herokuapp.com/forecast/${urlParams}`;
 
-  // debugger;
+  // Add loader
+  const loaderWrapper = document.createElement('div');
+  loaderWrapper.setAttribute('id', 'loader-wrapper');
+  const loader = `<div id="loader"></div>`;
+  loaderWrapper.innerHTML = loader;
+  document.querySelector('body').prepend(loaderWrapper);
+
   fetch(proxyServerUrl)
       .then((response) => {
         return response.json();
