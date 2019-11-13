@@ -134,7 +134,7 @@ function selectTemp() {
 
 function selectBackgroundColor(temperatureC) {
   let backgroundColor;
-  if (temperatureC <= -25) { backgroundColor = "#64ACD4"; }
+  if (temperatureC <= -25) { backgroundColor = "#55ACDD"; }
   else if (temperatureC > -25 && temperatureC <= -20) { backgroundColor = "#63B3E1"; }
   else if (temperatureC > -20 && temperatureC <= -15) { backgroundColor = "#68BADE"; }
   else if (temperatureC > -15 && temperatureC <= -10) { backgroundColor = "#78C6DF"; }
