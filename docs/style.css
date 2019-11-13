@@ -379,6 +379,7 @@ i.search-icon {
 .algolia-places {
   display: flex !important;
   justify-content: center;
+  position: inherit !important;
 }
 
 .ap-input, .ap-hint {
