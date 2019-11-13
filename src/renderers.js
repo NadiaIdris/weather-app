@@ -44,11 +44,18 @@ const renderWeatherData = (weatherData, unit) => {
   notSelectedTemp.forEach(elem => elem.addEventListener('click', selectTemp));
 
   resetGlobals();
+
+  // Check if user is on touch device, then change overflow-y to auto.
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    const hourContainers = document.querySelectorAll('.all-hours-container');
+    hourContainers.forEach(hour => {
+      hour.style.overflowY = 'auto';
+    });
+  }
 };
 
 const renderDay = (weatherData, index, unit) => {
   let content = '';
-  // var backgroundColor;
   let temperatureC;
 
   function paintDayOverview() {
