@@ -32,9 +32,9 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
-  /*height: 100vh; !* Fallback for browsers that do not support Custom Properties *!*/
-  /*height: calc(var(--vh, 1vh) * 100);*/
+  /* Make URL bar sticky on mobile devices:
+     https://developers.google.com/web/updates/2016/12/url-bar-resizing
+  */
   height:100%;
   position:fixed;
 }
@@ -68,6 +68,7 @@ p {
 #bottom-bar-container {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   position: sticky;
   bottom: 0;
   flex-grow: 0;
@@ -76,6 +77,11 @@ p {
   height: 58px;
   min-width: 320px;
   background-color: var(--white);
+}
+
+#right-side {
+  display: flex;
+  max-width: calc(100% - 58px);
 }
 
 #search-container {
@@ -101,6 +107,7 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-left: 1px solid var(--light-gray);
 }
 
 .link-to-website a {
@@ -120,7 +127,6 @@ i#my-location {
   width: 58px;
   height: 58px;
   cursor: pointer;
-  border-left: 1px solid var(--light-gray);
 }
 
 i.search-icon {
