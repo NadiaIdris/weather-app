@@ -32,6 +32,8 @@ Here's a link to a [private design document](https://docs.google.com/document/d/
 
 ## Designs
 
+![](https://raw.githubusercontent.com/MaretIdris/weather-app/master/designs/weather_app.gif)
+
 ![](https://raw.githubusercontent.com/MaretIdris/weather-app/master/designs/mumbai.png)
 
 ![](https://raw.githubusercontent.com/MaretIdris/weather-app/master/designs/new_york.png)
