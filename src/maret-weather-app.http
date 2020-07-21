@@ -22,3 +22,5 @@ GET https://maret-weather-app.herokuapp.com/
 GET https://maret-weather-app.herokuapp.com/forecast/6eae3396dc3311cb103d2f86f03d5775/37.3914086,-122.00416789999998?exclude=minutely
 
 ###
+
+
