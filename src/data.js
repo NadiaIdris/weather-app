@@ -57,7 +57,7 @@ const fetchReverseGeocode = async (position) => {
 const getWeatherDataNow = (lat, lng) => {
   if (!lat || !lng) {
     console.warn("Can't get weather, since null arguments were" +
-                     " passed for lat or lng!");
+        " passed for lat or lng!");
     return;
   }
 
@@ -91,3 +91,4 @@ const getWeatherDataNow = (lat, lng) => {
 };
 
 export {askLocation, getWeatherDataNow};
+

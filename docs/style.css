@@ -110,11 +110,9 @@ p {
   border-left: 1px solid var(--light-gray);
 }
 
-.link-to-website a {
-  text-decoration: none;
-  color: black;
-  font-weight: 900;
-  font-size: 19px;
+.link-to-website a img {
+  width: 50px;
+  display: block;
 }
 
 .search-icon {
