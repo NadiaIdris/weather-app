@@ -9,7 +9,10 @@ const askLocation = () => {
 
     fetchReverseGeocode(position).then((placeData) => {
       const city = placeData.address.city;
-      save(CONSTANTS.CITY, city);
+      const town = placeData.address.town;
+      // Sometimes the nominatim API returns city, other times town. E.g. Mountain
+      // View, CA is a city, but Kirkland, WA is considered to be a town.
+      city ? save(CONSTANTS.CITY, city) : save(CONSTANTS.CITY, town)
       getWeatherDataNow(lat, lng);
 
       if (load(CONSTANTS.CITY)) {
