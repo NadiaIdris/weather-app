@@ -22,9 +22,21 @@ here](https://maretidris.github.io/weather-app/).
   npm run build_dev
   ```
 
+## How to deploy this app to maretidris.github.io/weather-app
+
+1. Make the changes in your code.
+2. Run `npm run build_dev`.
+
+   - this uses `webpack.dev.config.js` to generate the minified
+     bundle that is deployed to the `docs` folder.
+   - GitHub Pages is configured to use the files in the `docs` folder
+     to serve up the app on `maretidris.github.io/weather-app`.
+
+3. Commit and push!
+
 ## Description
 
-This app is for people who have moved to the US from another country that uses Celsius and they are interacting Americans who understand Fahrenheit. 
+This app is for people who have moved to the US from another country that uses Celsius and they are interacting Americans who understand Fahrenheit.
 
 ## Design document
 
@@ -43,4 +55,3 @@ Here's a link to a [private design document](https://docs.google.com/document/d/
 ![](https://raw.githubusercontent.com/MaretIdris/weather-app/master/designs/sunnyvale.png)
 
 ![](https://raw.githubusercontent.com/MaretIdris/weather-app/master/designs/tallinn.png)
-
