@@ -8,7 +8,7 @@ here](https://maretidris.github.io/weather-app/).
 1. Clone this repo to your computer.
 2. Open a terminal and go the folder in which you cloned this repo.
 3. Run `npm install`.
-4. Run `npm run start`.
+4. Run `npm run start_dev`.
 
 - To run the webpack dev server (and open a new Chrome tab), run:
 
