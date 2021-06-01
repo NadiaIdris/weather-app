@@ -1,20 +1,19 @@
-import {load, CONSTANTS} from "./storage";
-import {getWeatherDataNow} from "./data";
-import {renderWeatherData} from "./renderers";
+import { load, CONSTANTS } from "./storage";
+import { getWeatherDataNow } from "./data";
+import { renderWeatherData } from "./renderers";
 
+const paintEmptyState = () => {
+  deleteElementBySelector("#empty-state");
 
-function paintEmptyState() {
-  deleteElementBySelector('#empty-state');
-
-  const body = document.querySelector('body');
-  const emptyStateContainer = document.createElement('div');
-  emptyStateContainer.setAttribute('id', 'empty-state');
+  const body = document.querySelector("body");
+  const emptyStateContainer = document.createElement("div");
+  emptyStateContainer.setAttribute("id", "empty-state");
   body.prepend(emptyStateContainer);
 
   emptyStateContainer.innerHTML = `
       <h1>Search a location below and the <br>weather will appear here.</h1>
     `;
-}
+};
 
 const paintLandingPage = () => {
   const weatherData = load(CONSTANTS.WEATHER_DATA);
@@ -30,11 +29,10 @@ const paintLandingPage = () => {
     getWeatherDataNow(lat, lng);
 
     if (load(CONSTANTS.CITY)) {
-      const searchBox = document.querySelector('#search-box');
+      const searchBox = document.querySelector("#search-box");
       searchBox.value = load(CONSTANTS.CITY);
     }
-  }
-  else {
+  } else {
     paintEmptyState();
   }
 };
@@ -47,24 +45,19 @@ const deleteElementBySelector = (selector) => {
 };
 
 function showWeatherDetails() {
-  const hourDetails = this.querySelector('.hour-details');
-  hourDetails.classList.toggle('hour-details-accordion');
+  const hourDetails = this.querySelector(".hour-details");
+  hourDetails.classList.toggle("hour-details-accordion");
   // Add shadow to the details container.
   const hourContainer = this;
-  hourContainer.classList.toggle('inner-shadow');
+  hourContainer.classList.toggle("inner-shadow");
 }
 
 const addClickEventListeners = () => {
-  const hourContainers = document.querySelectorAll('.hour-container');
+  const hourContainers = document.querySelectorAll(".hour-container");
   // Attach all the event listeners.
   for (const container of hourContainers) {
-    container.addEventListener('click', showWeatherDetails);
+    container.addEventListener("click", showWeatherDetails);
   }
 };
 
-
-export {
-  paintLandingPage,
-  deleteElementBySelector,
-  addClickEventListeners,
-};
+export { paintLandingPage, deleteElementBySelector, addClickEventListeners };
