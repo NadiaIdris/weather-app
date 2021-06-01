@@ -1,25 +1,24 @@
 /**
  * The following keys are stored in localStorage.
  */
-    //https://darksky.net/dev/docs
+//https://darksky.net/dev/docs
 const CONSTANTS = {
   WEATHER_DATA: "WEATHER_DATA",
-  LAT         : "LAT",
-  LNG         : "LNG",
-  TEMP        : "TEMP",
-  F           : "F",
-  C           : "C",
-  CITY        : "CITY",
-  ACCESS      : "ACCESS",
-  GRANTED     : "GRANTED",
+  LAT: "LAT",
+  LNG: "LNG",
+  TEMP: "TEMP",
+  F: "F",
+  C: "C",
+  CITY: "CITY",
+  ACCESS: "ACCESS",
+  GRANTED: "GRANTED",
 };
 
 /**
  * Given the key and the value, the stringified value is saved to localStorage.
  */
-const save = (key, weatherData) => {
-  localStorage.setItem(key, JSON.stringify(weatherData));
-  // console.log(`Data for key "${key}" saved to localStorage`);
+const save = (key, data) => {
+  localStorage.setItem(key, JSON.stringify(data));
 };
 
 /**
@@ -36,4 +35,4 @@ const load = (key) => {
   return dataFromStorage;
 };
 
-export {save, load, CONSTANTS};
+export { save, load, CONSTANTS };

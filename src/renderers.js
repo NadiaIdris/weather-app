@@ -1,6 +1,15 @@
-import {calcHour, f2c, formatDate, getCurrentHour, selectBackgroundColor, miles2km, getUvIndexDescription, selectTemp} from "./utils";
-import {addClickEventListeners, deleteElementBySelector} from "./paint_ui";
-import {load, CONSTANTS} from "./storage";
+import {
+  calcHour,
+  f2c,
+  formatDate,
+  getCurrentHour,
+  getUvIndexDescription,
+  miles2km,
+  selectBackgroundColor,
+  selectTemp,
+} from "./utils";
+import { addClickEventListeners, deleteElementBySelector } from "./paint_ui";
+import { CONSTANTS, load } from "./storage";
 
 // Globals
 let hour;
@@ -14,91 +23,110 @@ function resetGlobals() {
 
 const renderWeatherData = (weatherData, unit) => {
   resetGlobals();
-  const weatherDailyArray = weatherData.daily.data;
 
   // Reset the DOM.
-  deleteElementBySelector('#empty-state');
-  deleteElementBySelector('#loader-wrapper');
-  deleteElementBySelector('#all-weather-container');
+  deleteElementBySelector("#empty-state");
+  deleteElementBySelector("#loader-wrapper");
+  deleteElementBySelector("#all-weather-container");
+
+  const weatherDailyArray = weatherData.daily.data;
 
   // Paint new interface.
-  const body = document.querySelector('body');
-  const allWeatherContainer = document.createElement('div');
-  allWeatherContainer.setAttribute('id', 'all-weather-container');
-  allWeatherContainer.style.display = 'flex';
+  const body = document.querySelector("body");
+  const allWeatherContainer = document.createElement("div");
+  allWeatherContainer.setAttribute("id", "all-weather-container");
+  allWeatherContainer.style.display = "flex";
   body.prepend(allWeatherContainer);
 
   for (let i = 0; i < weatherDailyArray.length; i++) {
     allWeatherContainer.innerHTML += renderDay(weatherData, i, unit);
     addClickEventListeners();
-    const dayWeatherContainer = document.querySelectorAll('.day-weather-container')[i];
-    const allHoursContainer = document.querySelectorAll('.all-hours-container')[i];
+    const dayWeatherContainer = document.querySelectorAll(
+      ".day-weather-container"
+    )[i];
+    const allHoursContainer = document.querySelectorAll(".all-hours-container")[
+      i
+    ];
 
-    // If no hours left to print on viewport, center daily overview container.
+    // If there isn't any hours to print for that day, center daily overview container.
     if (!allHoursContainer) {
       dayWeatherContainer.style.justifyContent = "center";
     }
   }
 
-  const notSelectedTemp = document.querySelectorAll('.not-selected-temp');
-  notSelectedTemp.forEach(elem => elem.addEventListener('click', selectTemp));
+  const notSelectedTemp = document.querySelectorAll(".not-selected-temp");
+  notSelectedTemp.forEach((elem) => elem.addEventListener("click", selectTemp));
 
   resetGlobals();
 
-  // Check if user is on touch device, then change overflow-y to auto.
+  // Check if user is on touch device, then change every "all-hours-container" overflow-y to auto.
   if (/Mobi|Android/i.test(navigator.userAgent)) {
-    const hourContainers = document.querySelectorAll('.all-hours-container');
-    hourContainers.forEach(hour => {
-      hour.style.overflowY = 'auto';
+    const hourContainers = document.querySelectorAll(".all-hours-container");
+    hourContainers.forEach((hour) => {
+      hour.style.overflowY = "auto";
     });
   }
 };
 
 const renderDay = (weatherData, index, unit) => {
-  let content = '';
+  let content = "";
   let temperatureC;
 
-  function paintDayOverview() {
-    // If it's day 1 (today), pass weatherData.currently to the function.
-    // else pass weatherData.daily.data[1]
+  const paintDayOverview = () => {
+    // If it's today (hour is 0), pass weatherData.currently to the renderDayOverview
+    // function. Else pass weatherData.daily.data[1, 2, ... etc].
     if (hour === 0) {
-      content += renderDayOverview(weatherData.currently, unit, weatherData.offset);
+      content += renderDayOverview(
+        weatherData.currently,
+        unit,
+        weatherData.offset
+      );
       // Paint the day background color
-      const temperatureF = Math.round(weatherData.currently.apparentTemperature);
+      const temperatureF = Math.round(
+        weatherData.currently.apparentTemperature
+      );
       temperatureC = f2c(temperatureF);
       backgroundColor = selectBackgroundColor(temperatureC);
     } else {
-      content += renderDayOverview(weatherData.daily.data[index], unit, weatherData.offset);
-      // Paint the background color
-
-      const temperatureF = Math.round(weatherData.daily.data[index].temperatureHigh);
+      content += renderDayOverview(
+        weatherData.daily.data[index],
+        unit,
+        weatherData.offset
+      );
+      // Paint the day background color
+      const temperatureF = Math.round(
+        weatherData.daily.data[index].temperatureHigh
+      );
       temperatureC = f2c(temperatureF);
       backgroundColor = selectBackgroundColor(temperatureC);
     }
-  }
+  };
   paintDayOverview();
 
-  if (weatherData.hourly.data) { content += renderAllHoursPerDay(weatherData); }
+  if (weatherData.hourly.data) {
+    content += renderAllHoursPerDay(weatherData);
+  }
 
   return `<div class="day-weather-container" style="background-color: ${backgroundColor}">${content}</div>`;
 };
 
-
 const renderDayOverview = (data, unit, offset) => {
   let date = formatDate(data.time, offset);
   const weatherData = load(CONSTANTS.WEATHER_DATA);
-  if (data.time === weatherData.currently.time) date = 'Now';
+  if (data.time === weatherData.currently.time) date = "Now";
 
   const icon = data.icon;
-  const ifTempFSelected = unit === CONSTANTS.F ? "selected-temp" : "not-selected-temp";
-  const ifTempCSelected = unit === CONSTANTS.C ? "selected-temp" : "not-selected-temp";
+  const ifTempFSelected =
+    unit === CONSTANTS.F ? "selected-temp" : "not-selected-temp";
+  const ifTempCSelected =
+    unit === CONSTANTS.C ? "selected-temp" : "not-selected-temp";
 
   // Generate day background color.
-  const temperatureF = data.temperature ? Math.round(data.temperature) :
-      Math.round(data.temperatureHigh);
+  const temperatureF = data.temperature
+    ? Math.round(data.temperature)
+    : Math.round(data.temperatureHigh);
   const temperatureC = f2c(temperatureF);
   const backgroundColor = selectBackgroundColor(temperatureC);
-
 
   return `
     <div class="overview-container" style="background-color: ${backgroundColor}">
@@ -112,9 +140,8 @@ const renderDayOverview = (data, unit, offset) => {
   `;
 };
 
-
 // Render all hours for ONE day.
-const renderAllHoursPerDay = weatherData => {
+const renderAllHoursPerDay = (weatherData) => {
   const hourlyDataArray = weatherData.hourly.data;
   const currentConditionsData = weatherData.currently;
   let content = "";
@@ -124,14 +151,22 @@ const renderAllHoursPerDay = weatherData => {
     content += renderHour(currentConditionsData, weatherData.offset);
     hour++;
 
-    const currentHourTemp = getCurrentHour(currentConditionsData.time, weatherData.offset);
-    if (currentHourTemp === 23){
-      return content === '' ? '' : `<div class="all-hours-container">${content}</div>`;
+    const currentHour = getCurrentHour(
+      currentConditionsData.time,
+      weatherData.offset
+    );
+    if (currentHour === 23) {
+      return content === ""
+        ? ""
+        : `<div class="all-hours-container">${content}</div>`;
     }
   }
 
   const hoursInADay = 23;
-  const getCurrentHourReturns = getCurrentHour(currentConditionsData.time, weatherData.offset);
+  const getCurrentHourReturns = getCurrentHour(
+    currentConditionsData.time,
+    weatherData.offset
+  );
   let currentHour;
 
   if (hour === 1 && getCurrentHourReturns === 0) {
@@ -139,7 +174,8 @@ const renderAllHoursPerDay = weatherData => {
   } else if (hour === 1 && getCurrentHourReturns === 23) {
     currentHour = 0;
   } else if (hour === 1) {
-    currentHour = getCurrentHour(currentConditionsData.time, weatherData.offset) + 1;
+    currentHour =
+      getCurrentHour(currentConditionsData.time, weatherData.offset) + 1;
   } else {
     currentHour = 0;
   }
@@ -147,33 +183,51 @@ const renderAllHoursPerDay = weatherData => {
   const hoursLeftInADay = hoursInADay - currentHour;
 
   // If it's UTC time, then run 23 times
-  if (hour === 1 && weatherData.offset === 0){
-    for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+  if (hour === 1 && weatherData.offset === 0) {
+    for (
+      let hourIndex = 0;
+      hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length;
+      hourIndex++
+    ) {
       content += renderHour(hourlyDataArray[hour], weatherData.offset);
       hour++;
     }
   }
   // If now is 0AM, run 22 times
   else if (currentHour === 0 && hour === 1 && isHour0Now) {
-    for (let hourIndex = 0; hourIndex < hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+    for (
+      let hourIndex = 0;
+      hourIndex < hoursLeftInADay && hour < hourlyDataArray.length;
+      hourIndex++
+    ) {
       content += renderHour(hourlyDataArray[hour], weatherData.offset);
       hour++;
     }
   }
   // If it's new day, run 23 times
   else if (currentHour === 0) {
-    for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+    for (
+      let hourIndex = 0;
+      hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length;
+      hourIndex++
+    ) {
       content += renderHour(hourlyDataArray[hour], weatherData.offset);
       hour++;
     }
   } else {
-    for (let hourIndex = 0; hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length; hourIndex++) {
+    for (
+      let hourIndex = 0;
+      hourIndex <= hoursLeftInADay && hour < hourlyDataArray.length;
+      hourIndex++
+    ) {
       content += renderHour(hourlyDataArray[hour], weatherData.offset);
       hour++;
     }
   }
 
-  return content === '' ? '' : `<div class="all-hours-container">${content}</div>`;
+  return content === ""
+    ? ""
+    : `<div class="all-hours-container">${content}</div>`;
 };
 
 function renderHour(hourData, offset) {
@@ -185,10 +239,10 @@ function renderHour(hourData, offset) {
   const uvIndex = getUvIndexDescription(hourData.uvIndex);
   const humidity = Math.round(hourData.humidity * 100);
   const dewPoint = Math.round(hourData.dewPoint);
-  const precipitation = Math.round(hourData.precipProbability *100);
+  const precipitation = Math.round(hourData.precipProbability * 100);
 
   let hourToPrint;
-  if (hour === 0 && hourEvaluated === '0 AM') {
+  if (hour === 0 && hourEvaluated === "0 AM") {
     hourToPrint = "Now";
     isHour0Now = true;
   } else if (hour === 0) {
@@ -197,15 +251,24 @@ function renderHour(hourData, offset) {
     hourToPrint = hourEvaluated;
   }
 
-  if (hourEvaluated === '0 AM' && hour !== 0) { hourToPrint = 'Midnight'; }
-  if (hourEvaluated === '12 PM' && hour !== 0) { hourToPrint = 'Noon'; }
+  if (hourEvaluated === "0 AM" && hour !== 0) {
+    hourToPrint = "Midnight";
+  }
+  if (hourEvaluated === "12 PM" && hour !== 0) {
+    hourToPrint = "Noon";
+  }
 
   backgroundColor = selectBackgroundColor(temperatureC);
-  const selectedTempHourlyF = load(CONSTANTS.TEMP) === CONSTANTS.F ? "selected-temp-hourly" : "not-selected-temp-hourly";
-  const selectedTempHourlyC = load(CONSTANTS.TEMP) === CONSTANTS.C ? "selected-temp-hourly" : "not-selected-temp-hourly";
+  const selectedTempHourlyF =
+    load(CONSTANTS.TEMP) === CONSTANTS.F
+      ? "selected-temp-hourly"
+      : "not-selected-temp-hourly";
+  const selectedTempHourlyC =
+    load(CONSTANTS.TEMP) === CONSTANTS.C
+      ? "selected-temp-hourly"
+      : "not-selected-temp-hourly";
 
-  let content =
-      `  
+  let content = `  
       <div class="hour-container" style="background-color: ${backgroundColor}">
         <div class="hour-summary">
           <p class="left-col">${hourToPrint}</p>
@@ -246,8 +309,4 @@ const testing = {
   renderDay,
 };
 
-export {
-  renderWeatherData,
-  testing,
-}
-
+export { renderWeatherData, testing };
